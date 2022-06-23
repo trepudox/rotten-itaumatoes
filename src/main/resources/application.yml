@@ -1,10 +1,10 @@
 spring:
   datasource:
-    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_rotten_itaumatoes"
+    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_rotten_itaumatoes?createDatabaseIfNotExist=true"
     username: "root"
     password: "root"
     driver-class-name: "com.mysql.cj.jdbc.Driver"
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: "create"
+      ddl-auto: "create-drop"

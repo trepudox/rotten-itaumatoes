@@ -1,5 +1,6 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
+@JsonIgnoreProperties(value = "password")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable {
 
