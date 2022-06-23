@@ -1,5 +1,6 @@
-package com.trepudox.rottenitaumatoes.dataprovider.client;
+package com.trepudox.rottenitaumatoes.dataprovider.client.impl;
 
+import com.trepudox.rottenitaumatoes.dataprovider.client.IOMDBClient;
 import com.trepudox.rottenitaumatoes.dataprovider.client.feign.OMDBFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
