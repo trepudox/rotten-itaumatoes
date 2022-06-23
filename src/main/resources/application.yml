@@ -8,3 +8,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: "create-drop"
+
+feign:
+  config:
+    omdb:
+      apiKey: "edf0a411"
+      url: "http://www.omdbapi.com"
