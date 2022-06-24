@@ -10,9 +10,10 @@ public enum EnProfile {
     AVANCADO(100L),
     MODERADOR(1000L);
 
-    final Long score;
+    private final Long score;
 
     EnProfile(Long score) {
         this.score = score;
     }
+
 }
