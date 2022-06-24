@@ -22,7 +22,7 @@ public class ReviewPK implements Serializable {
     @Column(name = "review_id")
     private Long reviewId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "reviewer")
     private User reviewer;
 

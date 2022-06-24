@@ -22,19 +22,13 @@ public class ReviewWithQuote implements Serializable {
 
     //TODO: analisar cascade, fetchtype e validation
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "review_with_quote_id")
-    private Long reviewWithQuoteId;
+    @EmbeddedId
+    private ReviewWithQuotePK primaryKey;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quoted_review_id")
     @JoinColumn(name = "quoted_reviewer")
     private Review quotedReview;
-
-    @ManyToOne
-    @JoinColumn(name = "reviewer")
-    private User reviewer;
 
     @Column(name = "movie_imdb_id")
     private String movieImdbId;
