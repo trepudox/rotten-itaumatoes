@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_rotten_itaumatoes?createDatabaseIfNotExist=true"
+    url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_rotten_itaumatoes?createDatabaseIfNotExist=true&connectionTimeZone=UTC"
     username: "root"
     password: "root"
     driver-class-name: "com.mysql.cj.jdbc.Driver"
@@ -14,3 +14,12 @@ feign:
     omdb:
       apiKey: "edf0a411"
       url: "http://www.omdbapi.com"
+
+security:
+  hash:
+    loops: 100000
+    keyLength: 256
+    salt: -80,88,10,39,125,-71,-1,0,53,-112,-67,88,7,15,95,-110
+    algorithm: "PBKDF2WithHmacSHA1"
+  secret:
+    jwt: "jwtsecret"
