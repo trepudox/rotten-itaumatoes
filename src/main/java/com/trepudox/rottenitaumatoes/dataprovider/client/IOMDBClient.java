@@ -1,24 +1,29 @@
 package com.trepudox.rottenitaumatoes.dataprovider.client;
 
-import org.springframework.http.ResponseEntity;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.*;
 
 public interface IOMDBClient {
 
-    //TODO: Alterar tipo do retorno
+    OMDBMovieDTO getMovieByTitle(String title);
 
-    ResponseEntity<?> getMovieByTitle(String title);
+    OMDBSeriesDTO getSeriesByTitle(String title);
 
-    ResponseEntity<?> getSeriesByTitle(String title);
+    OMDBEpisodeDTO getEpisodeByTitle(String title);
 
-    ResponseEntity<?> getByImdbId(String imdbId);
+    OMDBMovieDTO getMovieByImdbId(String imdbId);
 
-    ResponseEntity<?> searchByTitleAndTypeAndPage(String title, String type, int page);
+    OMDBSeriesDTO getSeriesByImdbId(String imdbId);
 
-    ResponseEntity<?> searchMovieByTitleAndPage(String title, int page);
+    OMDBEpisodeDTO getEpisodeByImdbId(String imdbId);
 
-    ResponseEntity<?> searchSeriesByTitleAndPage(String title, int page);
+    OMDBSearchDTO searchMovieByTitleAndPage(String title, int page);
 
-    ResponseEntity<?> searchByTitleAndTypeAndYearAndPage(String title, String type, String year, int page);
+    OMDBSearchDTO searchSeriesByTitleAndPage(String title, int page);
 
+    OMDBSearchDTO searchEpisodeByTitleAndPage(String title, int page);
+
+    OMDBSearchDTO searchByTitleAndTypeAndPage(String title, String type, int page);
+
+    OMDBSearchDTO searchByTitleAndTypeAndYearAndPage(String title, String type, String year, int page);
 
 }
