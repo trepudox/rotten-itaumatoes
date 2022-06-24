@@ -30,7 +30,7 @@ public class RegisterUserUseCaseImpl implements IRegisterUserUseCase {
                 .username(userToBeRegistered.getUsername())
                 .password(password)
                 .profile(EnProfile.LEITOR.name())
-                .score(0)
+                .score(0L)
                 .build();
 
         return userRepository.save(newUser);

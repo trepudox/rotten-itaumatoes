@@ -35,7 +35,7 @@ public class User implements Serializable {
     private String profile;
 
     @Column(name = "score")
-    private int score;
+    private Long score;
 
     @CreatedDate
     @Column(name = "creation_date_time")
