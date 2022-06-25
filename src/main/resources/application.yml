@@ -14,6 +14,8 @@ feign:
     omdb:
       apiKey: "edf0a411"
       url: "http://www.omdbapi.com"
+    authServer:
+      url: "http://localhost:8081"
 
 security:
   hash:
@@ -22,4 +24,4 @@ security:
     salt: -80,88,10,39,125,-71,-1,0,53,-112,-67,88,7,15,95,-110
     algorithm: "PBKDF2WithHmacSHA1"
   secret:
-    jwt: "jwtsecret"
+    jwt: "bVps6IafGVXz5OeLBuBbBQYctOcjT70BG2hEjeRuJ3Hgpnti1f6uAkA3EM4ZxaV"
