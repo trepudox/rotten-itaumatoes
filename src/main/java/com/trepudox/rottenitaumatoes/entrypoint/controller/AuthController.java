@@ -2,10 +2,10 @@ package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
 import com.trepudox.rottenitaumatoes.core.usecase.ILogInUseCase;
 import com.trepudox.rottenitaumatoes.core.usecase.IRegisterUserUseCase;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.AccessTokenDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.JwtResponseDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserCredentialsDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.model.User;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ public class AuthController {
     private final ILogInUseCase logInUseCase;
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody UserCredentialsDTO userToBeRegistered) {
-        User newUser = registerUserUseCase.register(userToBeRegistered);
+    public ResponseEntity<UserDTO> register(@RequestBody UserCredentialsDTO userToBeRegistered) {
+        UserDTO newUser = registerUserUseCase.register(userToBeRegistered);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 

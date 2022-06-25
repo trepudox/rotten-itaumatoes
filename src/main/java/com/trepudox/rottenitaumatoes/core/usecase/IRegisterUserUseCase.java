@@ -1,10 +1,11 @@
 package com.trepudox.rottenitaumatoes.core.usecase;
 
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserCredentialsDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.model.User;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
 
 public interface IRegisterUserUseCase {
 
-    User register(UserCredentialsDTO userToBeRegistered);
+    UserDTO register(UserCredentialsDTO userToBeRegistered);
 
 }

@@ -1,9 +1,9 @@
 package com.trepudox.rottenitaumatoes.core.usecase;
 
-import com.trepudox.rottenitaumatoes.dataprovider.model.User;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
 
 public interface IViewProfileUseCase {
 
-    User view(String token);
+    UserDTO view(String token);
 
 }

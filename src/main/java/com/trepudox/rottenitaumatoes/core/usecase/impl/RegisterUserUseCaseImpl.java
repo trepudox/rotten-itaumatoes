@@ -1,11 +1,9 @@
 package com.trepudox.rottenitaumatoes.core.usecase.impl;
 
-import com.trepudox.rottenitaumatoes.core.exception.APIException;
 import com.trepudox.rottenitaumatoes.core.usecase.IRegisterUserUseCase;
+import com.trepudox.rottenitaumatoes.dataprovider.client.IAuthServerClient;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserCredentialsDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.enums.EnProfile;
-import com.trepudox.rottenitaumatoes.dataprovider.model.User;
-import com.trepudox.rottenitaumatoes.dataprovider.repository.UserRepository;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
 import com.trepudox.rottenitaumatoes.util.CustomPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,23 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RegisterUserUseCaseImpl implements IRegisterUserUseCase {
 
-    private final UserRepository userRepository;
     private final CustomPasswordEncoder customPasswordEncoder;
+    private final IAuthServerClient authServerClient;
 
     @Override
-    public User register(UserCredentialsDTO userToBeRegistered) {
-        if(userRepository.existsById(userToBeRegistered.getUsername()))
-            throw new APIException("Não foi possível realizar o cadastro", "Este usuario já está cadastrado", 422);
+    public UserDTO register(UserCredentialsDTO userToBeRegistered) {
+        String encodedPassword = customPasswordEncoder.encode(userToBeRegistered.getPassword());
+        UserCredentialsDTO newUserCredentials = new UserCredentialsDTO(userToBeRegistered.getUsername(), encodedPassword);
 
-        String password = customPasswordEncoder.encode(userToBeRegistered.getPassword());
-
-        User newUser = User.builder()
-                .username(userToBeRegistered.getUsername())
-                .password(password)
-                .profile(EnProfile.LEITOR.name())
-                .score(0L)
-                .build();
-
-        return userRepository.save(newUser);
+        return authServerClient.register(newUserCredentials);
     }
 }
