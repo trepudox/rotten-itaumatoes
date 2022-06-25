@@ -40,11 +40,15 @@ public class APIExceptionHandler {
             log.warn("Não foi possível converter o JSON no metodo handleFeignException()");
         }
 
-        int status = e.status();
+        String title = "Erro de integração com API externa";
+        String detail = "Não foi possível estabelecer uma comunicação estável com serviços externos";
+        int status = e.status() == -1 ? 504 : e.status();
+
+        log.error(title.concat(" - ").concat(e.request().toString()));
 
         ErrorResponseDTO error = ErrorResponseDTO.builder()
-                .title("Erro de integração com API externa")
-                .detail(e.getLocalizedMessage().replace('"', '\''))
+                .title(title)
+                .detail(detail)
                 .status(status)
                 .dateTime(LocalDateTime.now())
                 .build();
