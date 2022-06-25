@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
-public class FilterRegistrationConfig {
+public class FilterRegistrationBeanConfig {
     //TODO: MAPEAR ENDPOINTS
 
     @Bean
@@ -55,7 +55,7 @@ public class FilterRegistrationConfig {
     public FilterRegistrationBean<ModeradorAuthFilter> moderadorAuthFilterRegistration(SecurityFilterUtil securityFilterUtil) {
         FilterRegistrationBean<ModeradorAuthFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new ModeradorAuthFilter(securityFilterUtil));
-        registration.addUrlPatterns("");
+        registration.addUrlPatterns("/users/give-mod");
         registration.setOrder(5);
 
         return registration;

@@ -1,8 +1,9 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
+import com.trepudox.rottenitaumatoes.core.usecase.IGiveModeradorUseCase;
 import com.trepudox.rottenitaumatoes.core.usecase.IViewProfileUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.UsernameDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final IViewProfileUseCase viewProfileUseCase;
+    private final IGiveModeradorUseCase giveModeradorUseCase;
 
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> getUserProfileByToken(@RequestHeader("Authorization") String token) {
@@ -21,10 +23,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-//    @PostMapping("/give-mod")
-//    public ResponseEntity<User> giveModerador(@RequestBody userToBeModerador) {
-//        TODO: dar moderador e retornar novo perfil do usuario
-//        return ResponseEntity.status(HttpStatus.OK).body(user);
-//    }
+    @PostMapping("/give-mod")
+    public ResponseEntity<UserDTO> giveModerador(@RequestBody UsernameDTO username) {
+        UserDTO newModUser = giveModeradorUseCase.give(username);
+        return ResponseEntity.status(HttpStatus.OK).body(newModUser);
+    }
 
 }

@@ -5,6 +5,7 @@ import com.trepudox.rottenitaumatoes.core.exception.APIException;
 import com.trepudox.rottenitaumatoes.core.exception.APISecurityException;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.ErrorResponseDTO;
 import feign.FeignException;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
@@ -36,6 +38,13 @@ public class APIExceptionHandler {
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
 
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponseDTO> handleJwtException(JwtException e) {
+        int status = 401;
+
+        return ResponseEntity.status(HttpStatus.valueOf(status)).build();
+    }
+
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ErrorResponseDTO> handleFeignException(FeignException e) {
         try {
@@ -57,10 +66,22 @@ public class APIExceptionHandler {
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNoSuchElementException(NoSuchElementException e) {
+        int status = 422;
+
+        ErrorResponseDTO error = buildError("Não foi possível realizar a operação", "Entidade não encontrada", status);
+
+        return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception e) {
         if(e instanceof APISecurityException)
             return this.handleAPISecurityException((APISecurityException) e);
+
+        if(e instanceof JwtException)
+            return this.handleJwtException((JwtException) e);
 
         String title = "Não foi possível realizar a operação desejada";
         int status = 500;
