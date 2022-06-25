@@ -2,6 +2,7 @@ package com.trepudox.rottenitaumatoes.core.exception.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trepudox.rottenitaumatoes.core.exception.APIException;
+import com.trepudox.rottenitaumatoes.core.exception.APISecurityException;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.ErrorResponseDTO;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +18,22 @@ import java.time.LocalDateTime;
 public class APIExceptionHandler {
 
     @ExceptionHandler(APIException.class)
-    public ResponseEntity<ErrorResponseDTO> apiExceptionHandler(APIException e) {
-        HttpStatus status = HttpStatus.valueOf(e.getStatus());
+    public ResponseEntity<ErrorResponseDTO> handleAPIException(APIException e) {
+        ErrorResponseDTO error = buildError(e.getTitle(), e.getDetail(), e.getStatus());
 
-        ErrorResponseDTO errorBody = ErrorResponseDTO.builder()
-                .title(e.getTitle())
-                .detail(e.getDetail())
-                .status(e.getStatus())
-                .dateTime(LocalDateTime.now())
-                .build();
+        return ResponseEntity.status(HttpStatus.valueOf(e.getStatus())).body(error);
+    }
 
-        return ResponseEntity.status(status).body(errorBody);
+    @ExceptionHandler(APISecurityException.class)
+    public ResponseEntity<ErrorResponseDTO> handleAPISecurityException(APISecurityException e) {
+        int status = e.getStatus();
+
+        ErrorResponseDTO error = null;
+        if(status == 403) {
+            error = buildError(e.getTitle(), e.getDetail(), e.getStatus());
+        }
+
+        return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
 
     @ExceptionHandler(FeignException.class)
@@ -46,30 +52,33 @@ public class APIExceptionHandler {
 
         log.error(title.concat(" - ").concat(e.request().toString()));
 
-        ErrorResponseDTO error = ErrorResponseDTO.builder()
-                .title(title)
-                .detail(detail)
-                .status(status)
-                .dateTime(LocalDateTime.now())
-                .build();
+        ErrorResponseDTO error = buildError(title, detail, status);
 
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> exceptionExceptionHandler(Exception e) {
-        String title = "Não foi possível realizar a operação desejada";
+    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception e) {
+        if(e instanceof APISecurityException)
+            return this.handleAPISecurityException((APISecurityException) e);
 
-        ErrorResponseDTO errorBody = ErrorResponseDTO.builder()
-                .title(title)
-                .detail(e.getMessage())
-                .status(500)
-                .dateTime(LocalDateTime.now())
-                .build();
+        String title = "Não foi possível realizar a operação desejada";
+        int status = 500;
+
+        ErrorResponseDTO error = buildError(title, e.getMessage(), status);
 
         e.printStackTrace();
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
+        return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
+    }
+
+    private ErrorResponseDTO buildError(String title, String detail, int status) {
+        return ErrorResponseDTO.builder()
+                .title(title)
+                .detail(detail)
+                .status(status)
+                .dateTime(LocalDateTime.now())
+                .build();
     }
 
 }
