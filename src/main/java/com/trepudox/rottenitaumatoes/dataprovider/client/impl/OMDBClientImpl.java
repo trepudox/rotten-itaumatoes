@@ -7,7 +7,6 @@ import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ public class OMDBClientImpl implements IOMDBClient {
     private static final String INTEGRATION_ERROR_TITLE = "Houve um erro de integração com a OMDB API";
     private static final String INTEGRATION_ERROR_DETAIL = "Corpo de resposta ausente";
     private static final String OMDB_API_ERROR_TITLE = "Não foi possível realizar a consulta desejada";
-    private static final String OMDB_API_ERROR_TITLE_2 = "A pesquisa não retornou resultados";
     private static final String OMDB_API_ERROR_DETAIL = "Erro retornado da OMDB API: '%s'";
     private static final String SEPARATOR = ". ";
     private static final String PARAMS = "Params: ";
