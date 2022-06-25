@@ -1,5 +1,6 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
+import com.trepudox.rottenitaumatoes.core.usecase.IViewProfileUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-//    @GetMapping("/profile")
-//    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String token) {
-//        TODO: consultar usuario pela claim sub do JWT
-//        return ResponseEntity.status(HttpStatus.OK).body(user);
-//    }
+    private final IViewProfileUseCase viewProfileUseCase;
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String token) {
+        User user = viewProfileUseCase.view(token);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
 
 //    @PostMapping("/give-mod")
 //    public ResponseEntity<User> giveModerador(@RequestBody userToBeModerador) {
