@@ -19,8 +19,10 @@ public enum EnProfile {
         this.score = score;
     }
 
-    public static List<String> getRoles(long score) {
+    public static List<String> getRoles(EnProfile userProfile) {
         ArrayList<String> roles = new ArrayList<>();
+
+        Long score = userProfile.getScore();
         for(EnProfile profile : EnProfile.values()) {
             if(score >= profile.getScore())
                 roles.add(profile.name());
