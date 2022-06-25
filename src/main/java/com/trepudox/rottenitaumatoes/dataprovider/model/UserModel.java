@@ -1,6 +1,7 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.trepudox.rottenitaumatoes.dataprovider.enums.EnProfile;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,7 +23,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -6898167379430660643L;
 
-    //TODO: analisar validation e PROFILE em ENUM
+    //TODO: analisar validation
 
     @Id
     @Column(name = "username")
@@ -31,8 +32,9 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "profile")
-    private String profile;
+    private EnProfile profile;
 
     @Column(name = "score")
     private Long score;

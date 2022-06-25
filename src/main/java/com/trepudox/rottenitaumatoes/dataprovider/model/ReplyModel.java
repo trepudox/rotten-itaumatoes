@@ -1,7 +1,5 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "reply")
 @EntityListeners(AuditingEntityListener.class)
-public class Reply implements Serializable {
+public class ReplyModel implements Serializable {
 
     private static final long serialVersionUID = 959700976255020893L;
 
@@ -34,17 +32,17 @@ public class Reply implements Serializable {
     @JoinColumn(name = "replied_review_id")
     @JoinColumn(name = "replied_username")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Review repliedReview;
+    private ReviewModel repliedReview;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "replied_review_with_quote_id")
     @JoinColumn(name = "replied_review_with_quote_username")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ReviewWithQuote repliedReviewWithQuote;
+    private ReviewWithQuoteModel repliedReviewWithQuote;
 
     @ManyToOne
     @JoinColumn(name = "replier")
-    private User replier;
+    private UserModel replier;
 
     @Column(name = "text")
     private String text;
