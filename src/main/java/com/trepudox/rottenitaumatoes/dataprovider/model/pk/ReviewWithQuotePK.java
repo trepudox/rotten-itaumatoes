@@ -1,4 +1,6 @@
-package com.trepudox.rottenitaumatoes.dataprovider.model;
+package com.trepudox.rottenitaumatoes.dataprovider.model.pk;
+
+import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +16,6 @@ public class ReviewWithQuotePK implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "reviewer")
-    private User reviewer;
+    private UserModel reviewer;
 
 }

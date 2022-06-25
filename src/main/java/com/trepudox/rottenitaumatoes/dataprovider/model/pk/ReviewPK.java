@@ -1,6 +1,7 @@
-package com.trepudox.rottenitaumatoes.dataprovider.model;
+package com.trepudox.rottenitaumatoes.dataprovider.model.pk;
 
 
+import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,6 @@ public class ReviewPK implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "reviewer")
-    private User reviewer;
+    private UserModel reviewer;
 
 }

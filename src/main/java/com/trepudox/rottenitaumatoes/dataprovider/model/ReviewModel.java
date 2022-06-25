@@ -1,5 +1,6 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
+import com.trepudox.rottenitaumatoes.dataprovider.model.pk.ReviewPK;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "review")
 @EntityListeners(AuditingEntityListener.class)
-public class Review implements Serializable {
+public class ReviewModel implements Serializable {
 
     private static final long serialVersionUID = 6756969076950547234L;
 

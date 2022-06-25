@@ -1,5 +1,6 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
+import com.trepudox.rottenitaumatoes.dataprovider.model.pk.ReviewWithQuotePK;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "review_with_quote")
 @EntityListeners(AuditingEntityListener.class)
-public class ReviewWithQuote implements Serializable {
+public class ReviewWithQuoteModel implements Serializable {
 
     private static final long serialVersionUID = -4628896027142331270L;
 
@@ -28,7 +29,7 @@ public class ReviewWithQuote implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quoted_review_id")
     @JoinColumn(name = "quoted_reviewer")
-    private Review quotedReview;
+    private ReviewModel quotedReview;
 
     @Column(name = "movie_imdb_id")
     private String movieImdbId;

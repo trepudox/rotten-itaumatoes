@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Table(name = "user")
 @JsonIgnoreProperties(value = "password")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements Serializable {
+public class UserModel implements Serializable {
 
     private static final long serialVersionUID = -6898167379430660643L;
 
