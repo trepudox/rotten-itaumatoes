@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RegisterUserUseCaseImpl implements IRegisterUserUseCase {
 
-    //TODO: Realizar cadastro na API de segurança E CORRETAMENTE
-
     private final UserRepository userRepository;
     private final CustomPasswordEncoder customPasswordEncoder;
 
