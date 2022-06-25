@@ -1,3 +1,11 @@
+server:
+  port: 8080
+
+application:
+  name: @project.name@
+  description: @project.description@
+  version: @project.version@
+
 spring:
   datasource:
     url: "jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_rotten_itaumatoes?createDatabaseIfNotExist=true&connectionTimeZone=UTC"
@@ -8,6 +16,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: "update"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 feign:
   config:
@@ -23,5 +34,5 @@ security:
     keyLength: 256
     salt: -80,88,10,39,125,-71,-1,0,53,-112,-67,88,7,15,95,-110
     algorithm: "PBKDF2WithHmacSHA1"
-  secret:
-    jwt: "bVps6IafGVXz5OeLBuBbBQYctOcjT70BG2hEjeRuJ3Hgpnti1f6uAkA3EM4ZxaV"
+  jwt:
+    secret: "bVps6IafGVXz5OeLBuBbBQYctOcjT70BG2hEjeRuJ3Hgpnti1f6uAkA3EM4ZxaV"
