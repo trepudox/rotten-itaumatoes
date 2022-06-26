@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +28,7 @@ public class OMDBClientImpl implements IOMDBClient {
     private static final String OMDB_API_ERROR_DETAIL = "Erro retornado da OMDB API: '%s'";
     private static final String NO_ITEMS_FOUND_TITLE = "Nenhum item foi encontrado";
     private static final String NO_ITEMS_FOUND_DETAIL = "A busca não retornou resultados, verifique os parâmetros enviados";
+    private static final String OTHER_CATEGORY_TITLE = "ID de outra categoria";
     private static final String SEPARATOR = ". ";
     private static final String PARAMS = "Params: ";
 
@@ -64,6 +64,9 @@ public class OMDBClientImpl implements IOMDBClient {
         OMDBMovieDTO responseBody = omdbFeignClient.getMovieByImdbId(apiKey, imdbId.trim(), MOVIE).getBody();
         handleResponse(responseBody, imdbId);
 
+        if(!responseBody.getType().equals(MOVIE))
+            throw new APIException(OTHER_CATEGORY_TITLE, "Este ID não pertence a um filme", 422);
+
         return responseBody;
     }
 
@@ -72,6 +75,9 @@ public class OMDBClientImpl implements IOMDBClient {
         OMDBSeriesDTO responseBody = omdbFeignClient.getSeriesByImdbId(apiKey, imdbId.trim(), SERIES).getBody();
         handleResponse(responseBody, imdbId);
 
+        if(!responseBody.getType().equals(SERIES))
+            throw new APIException(OTHER_CATEGORY_TITLE, "Este ID não pertence a uma serie", 422);
+
         return responseBody;
     }
 
@@ -79,6 +85,9 @@ public class OMDBClientImpl implements IOMDBClient {
     public OMDBEpisodeDTO getEpisodeByImdbId(String imdbId) {
         OMDBEpisodeDTO responseBody = omdbFeignClient.getEpisodeByImdbId(apiKey, imdbId.trim(), EPISODE).getBody();
         handleResponse(responseBody, imdbId);
+
+        if(!responseBody.getType().equals(EPISODE))
+            throw new APIException(OTHER_CATEGORY_TITLE, "Este ID não pertence a um episodio", 422);
 
         return responseBody;
     }

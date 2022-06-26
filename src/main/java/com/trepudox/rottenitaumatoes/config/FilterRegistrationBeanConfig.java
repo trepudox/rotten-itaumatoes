@@ -27,6 +27,8 @@ public class FilterRegistrationBeanConfig {
         registration.setFilter(new LeitorAuthFilter(securityFilterUtil));
         registration.addUrlPatterns("/users/profile");
         registration.addUrlPatterns("/movies/*");
+        registration.addUrlPatterns("/series/*");
+        registration.addUrlPatterns("/episodes/*");
         registration.setOrder(2);
 
         return registration;
