@@ -27,6 +27,8 @@ public class OMDBClientImpl implements IOMDBClient {
     private static final String INTEGRATION_ERROR_DETAIL = "Corpo de resposta ausente";
     private static final String OMDB_API_ERROR_TITLE = "Não foi possível realizar a consulta desejada";
     private static final String OMDB_API_ERROR_DETAIL = "Erro retornado da OMDB API: '%s'";
+    private static final String NO_ITEMS_FOUND_TITLE = "Nenhum item foi encontrado";
+    private static final String NO_ITEMS_FOUND_DETAIL = "A busca não retornou resultados, verifique os parâmetros enviados";
     private static final String SEPARATOR = ". ";
     private static final String PARAMS = "Params: ";
 
@@ -168,10 +170,11 @@ public class OMDBClientImpl implements IOMDBClient {
 
             if(responseBody.getError().endsWith("not found!")) {
                 log.warn("Pesquisa não retornou resultado".concat(SEPARATOR).concat(PARAMS).concat(printableParams.toString()));
-                responseBody.setSearch(new ArrayList<>());
-                responseBody.setTotalResults("0");
-                responseBody.setResponse(true);
-                responseBody.setError(null);
+//                responseBody.setSearch(new ArrayList<>());
+//                responseBody.setTotalResults("0");
+//                responseBody.setResponse(true);
+//                responseBody.setError(null);
+                throw new APIException(NO_ITEMS_FOUND_TITLE, NO_ITEMS_FOUND_DETAIL, 422);
             } else if(responseBody.getError().startsWith("Too many results")) {
                 title = INTEGRATION_ERROR_TITLE;
                 detail = "O limite de itens encontrado pela OMDB API foi excedido, por favor, faça uma busca mais específica.";

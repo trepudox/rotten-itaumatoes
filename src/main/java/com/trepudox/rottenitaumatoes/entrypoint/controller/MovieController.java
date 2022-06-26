@@ -1,26 +1,41 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
-import com.trepudox.rottenitaumatoes.dataprovider.client.IOMDBClient;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.OMDBMovieDTO;
+import com.trepudox.rottenitaumatoes.core.usecase.IGetMovieByImdbIdUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.IGetMovieByTitleUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.ISearchMovieByTitleUseCase;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.MovieDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.SearchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movies")
 @RequiredArgsConstructor
 public class MovieController {
 
-    private final IOMDBClient omdbClient;
+    private final IGetMovieByTitleUseCase getMovieByTitleUseCase;
+    private final IGetMovieByImdbIdUseCase getMovieByImdbIdUseCase;
+    private final ISearchMovieByTitleUseCase searchMovieByTitleUseCase;
 
     @GetMapping("/title/{title}")
-    public ResponseEntity<OMDBMovieDTO> getMovieByTitle(@PathVariable String title) {
-        OMDBMovieDTO movie = omdbClient.getMovieByTitle(title);
+    public ResponseEntity<MovieDTO> getMovieByTitle(@PathVariable String title) {
+        MovieDTO movie = getMovieByTitleUseCase.get(title);
         return ResponseEntity.status(HttpStatus.OK).body(movie);
+    }
+
+    @GetMapping("/imdb-id/{imdbId}")
+    public ResponseEntity<MovieDTO> getMovieByImdbId(@PathVariable String imdbId) {
+        MovieDTO movie = getMovieByImdbIdUseCase.get(imdbId);
+        return ResponseEntity.status(HttpStatus.OK).body(movie);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchDTO> searchMovieByTitle(@RequestParam String title,
+                                                        @RequestParam(required = false, defaultValue = "1") int page) {
+        SearchDTO movies = searchMovieByTitleUseCase.search(title, page);
+        return ResponseEntity.status(HttpStatus.OK).body(movies);
     }
 
 }
