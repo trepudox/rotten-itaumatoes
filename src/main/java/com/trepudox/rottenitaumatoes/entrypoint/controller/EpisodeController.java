@@ -36,7 +36,7 @@ public class EpisodeController {
     //TODO: analisar funcionamento
     @GetMapping("/search")
     public ResponseEntity<SearchDTO> searchEpisodeByTitle(@RequestParam String title,
-                                                         @RequestParam(required = false, defaultValue = "1") int page) {
+                                                          @RequestParam(required = false, defaultValue = "1") int page) {
         SearchDTO episodes = searchEpisodeByTitleUseCase.search(title, page);
         return ResponseEntity.status(HttpStatus.OK).body(episodes);
     }

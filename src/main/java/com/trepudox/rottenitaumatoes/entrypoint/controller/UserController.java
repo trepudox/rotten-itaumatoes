@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/give-mod")
-    public ResponseEntity<UserDTO> giveModerador(@RequestBody UsernameDTO username) {
+    public ResponseEntity<UserDTO> giveModerador(@Valid @RequestBody UsernameDTO username) {
         UserDTO newModUser = giveModeradorUseCase.give(username);
         return ResponseEntity.status(HttpStatus.OK).body(newModUser);
     }
