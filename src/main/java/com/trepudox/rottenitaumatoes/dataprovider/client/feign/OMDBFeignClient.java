@@ -1,9 +1,6 @@
 package com.trepudox.rottenitaumatoes.dataprovider.client.feign;
 
-import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.OMDBEpisodeDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.OMDBMovieDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.OMDBSearchDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.OMDBSeriesDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.omdb.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +37,11 @@ public interface OMDBFeignClient {
     @GetMapping
     ResponseEntity<OMDBEpisodeDTO> getEpisodeByImdbId(@RequestParam("apikey") String apiKey,
                                                     @RequestParam("i") String imdbId,
-                                                    @RequestParam(value = "type", required = false, defaultValue = "series") String type);
+                                                    @RequestParam(value = "type", required = false, defaultValue = "episode") String type);
+
+    @GetMapping
+    ResponseEntity<OMDBItemDTO> getItemByImdbId(@RequestParam("apikey") String apiKey,
+                                                @RequestParam("i") String imdbId);
 
     @GetMapping
     ResponseEntity<OMDBSearchDTO> searchByTitleAndTypeAndPage(@RequestParam("apikey") String apiKey,

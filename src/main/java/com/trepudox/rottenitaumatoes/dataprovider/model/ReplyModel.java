@@ -30,13 +30,11 @@ public class ReplyModel implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "replied_review_id")
-    @JoinColumn(name = "replied_username")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ReviewModel repliedReview;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "replied_review_with_quote_id")
-    @JoinColumn(name = "replied_review_with_quote_username")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ReviewWithQuoteModel repliedReviewWithQuote;
 

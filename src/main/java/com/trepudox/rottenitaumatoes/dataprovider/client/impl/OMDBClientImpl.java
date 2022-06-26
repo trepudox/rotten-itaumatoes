@@ -132,6 +132,16 @@ public class OMDBClientImpl implements IOMDBClient {
         return responseBody;
     }
 
+    @Override
+    public Boolean existsByImdbId(String imdbId) {
+        OMDBItemDTO respondeBody = omdbFeignClient.getItemByImdbId(apiKey, imdbId).getBody();
+
+        if(respondeBody == null)
+            throw new APIException(INTEGRATION_ERROR_TITLE, INTEGRATION_ERROR_DETAIL, 500);
+
+        return respondeBody.getResponse();
+    }
+
     private void handleResponse(OMDBItemDTO responseBody, String... params) {
         List<String> printableParams = List.of(params);
 

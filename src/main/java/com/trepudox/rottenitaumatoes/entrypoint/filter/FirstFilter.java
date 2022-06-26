@@ -1,8 +1,9 @@
 package com.trepudox.rottenitaumatoes.entrypoint.filter;
 
-import com.trepudox.rottenitaumatoes.core.exception.handler.APIExceptionHandler;
+import com.trepudox.rottenitaumatoes.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 

@@ -1,6 +1,5 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
-import com.trepudox.rottenitaumatoes.dataprovider.model.pk.ReviewPK;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,11 +22,17 @@ public class ReviewModel implements Serializable {
 
     //TODO: analisar cascade, fetchtype e validation
 
-    @EmbeddedId
-    private ReviewPK primaryKey;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
+    private Long reviewId;
 
-    @Column(name = "movie_imdb_id")
-    private String movieImdbId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewer")
+    private UserModel reviewer;
+
+    @Column(name = "imdb_id")
+    private String imdbId;
 
     @Column(name = "rating")
     private Double rating;

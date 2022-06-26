@@ -1,9 +1,8 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
-import com.trepudox.rottenitaumatoes.core.usecase.IGetSeriesByImdbIdUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.IGetSeriesByTitleUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.ISearchSeriesByTitleUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.impl.GetSeriesByTitleUseCaseImpl;
+import com.trepudox.rottenitaumatoes.core.usecase.series.IGetSeriesByImdbIdUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.series.IGetSeriesByTitleUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.series.ISearchSeriesByTitleUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.SearchDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.SeriesDTO;
 import lombok.RequiredArgsConstructor;

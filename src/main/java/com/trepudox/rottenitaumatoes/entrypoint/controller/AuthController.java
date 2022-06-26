@@ -1,11 +1,10 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
-import com.trepudox.rottenitaumatoes.core.usecase.ILogInUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.IRegisterUserUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.auth.ILogInUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.auth.IRegisterUserUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.JwtResponseDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserCredentialsDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

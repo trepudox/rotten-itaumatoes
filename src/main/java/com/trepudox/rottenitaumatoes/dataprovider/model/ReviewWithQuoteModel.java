@@ -1,6 +1,5 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
-import com.trepudox.rottenitaumatoes.dataprovider.model.pk.ReviewWithQuotePK;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,16 +22,21 @@ public class ReviewWithQuoteModel implements Serializable {
 
     //TODO: analisar cascade, fetchtype e validation
 
-    @EmbeddedId
-    private ReviewWithQuotePK primaryKey;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_with_quote_id")
+    private Long reviewWithQuoteId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reviewer")
+    private UserModel reviewer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quoted_review_id")
-    @JoinColumn(name = "quoted_reviewer")
     private ReviewModel quotedReview;
 
-    @Column(name = "movie_imdb_id")
-    private String movieImdbId;
+    @Column(name = "imdb_id")
+    private String imdbId;
 
     @Column(name = "rating")
     private Double rating;

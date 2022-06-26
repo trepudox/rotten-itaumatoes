@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
-public class APIExceptionHandler {
+public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
 
     @ExceptionHandler(APIException.class)
     public ResponseEntity<ErrorResponseDTO> handleAPIException(APIException e) {

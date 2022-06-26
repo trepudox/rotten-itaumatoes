@@ -29,6 +29,9 @@ public class FilterRegistrationBeanConfig {
         registration.addUrlPatterns("/movies/*");
         registration.addUrlPatterns("/series/*");
         registration.addUrlPatterns("/episodes/*");
+        registration.addUrlPatterns("/reviews");
+        registration.addUrlPatterns("/reviews/id/*");
+        registration.addUrlPatterns("/reviews/imdb-id/*");
         registration.setOrder(2);
 
         return registration;
@@ -59,6 +62,8 @@ public class FilterRegistrationBeanConfig {
         FilterRegistrationBean<ModeradorAuthFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new ModeradorAuthFilter(securityFilterUtil));
         registration.addUrlPatterns("/users/give-mod");
+        registration.addUrlPatterns("/reviews/set-duplicated");
+        registration.addUrlPatterns("/reviews/delete/*");
         registration.setOrder(5);
 
         return registration;

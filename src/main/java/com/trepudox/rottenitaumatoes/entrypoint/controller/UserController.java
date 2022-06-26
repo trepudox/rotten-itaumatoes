@@ -1,7 +1,7 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
-import com.trepudox.rottenitaumatoes.core.usecase.IGiveModeradorUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.IViewProfileUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.user.IGiveModeradorUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.user.IViewProfileUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UserDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.UsernameDTO;
 import lombok.RequiredArgsConstructor;

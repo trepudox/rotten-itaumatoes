@@ -26,4 +26,6 @@ public interface IOMDBClient {
 
     OMDBSearchDTO searchByTitleAndTypeAndYearAndPage(String title, String type, String year, int page);
 
+    Boolean existsByImdbId(String imdbId);
+
 }

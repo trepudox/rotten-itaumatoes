@@ -1,8 +1,8 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
-import com.trepudox.rottenitaumatoes.core.usecase.IGetMovieByImdbIdUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.IGetMovieByTitleUseCase;
-import com.trepudox.rottenitaumatoes.core.usecase.ISearchMovieByTitleUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.movie.IGetMovieByImdbIdUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.movie.IGetMovieByTitleUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.movie.ISearchMovieByTitleUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.MovieDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.SearchDTO;
 import lombok.RequiredArgsConstructor;
