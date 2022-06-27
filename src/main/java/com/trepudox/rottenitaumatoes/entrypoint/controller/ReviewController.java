@@ -49,8 +49,9 @@ public class ReviewController {
     }
 
     @DeleteMapping("/delete/{reviewId}")
-    public ResponseEntity<Void> deleteReviewById(@PathVariable Long reviewId) {
-        deleteReviewByIdUseCase.delete(reviewId);
+    public ResponseEntity<Void> deleteReviewById(@RequestHeader("Authorization") String token,
+                                                 @PathVariable Long reviewId) {
+        deleteReviewByIdUseCase.delete(token, reviewId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

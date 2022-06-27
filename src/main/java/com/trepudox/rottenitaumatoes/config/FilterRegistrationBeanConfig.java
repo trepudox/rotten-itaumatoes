@@ -32,6 +32,7 @@ public class FilterRegistrationBeanConfig {
         registration.addUrlPatterns("/reviews");
         registration.addUrlPatterns("/reviews/id/*");
         registration.addUrlPatterns("/reviews/imdb-id/*");
+        registration.addUrlPatterns("/reviews/delete/*"); // Verificacao de role ocorrerá dentro do UseCase
         registration.setOrder(2);
 
         return registration;
@@ -63,7 +64,6 @@ public class FilterRegistrationBeanConfig {
         registration.setFilter(new ModeradorAuthFilter(securityFilterUtil));
         registration.addUrlPatterns("/users/give-mod");
         registration.addUrlPatterns("/reviews/set-duplicated");
-        registration.addUrlPatterns("/reviews/delete/*");
         registration.setOrder(5);
 
         return registration;
