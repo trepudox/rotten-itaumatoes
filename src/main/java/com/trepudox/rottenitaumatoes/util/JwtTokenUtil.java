@@ -1,5 +1,6 @@
 package com.trepudox.rottenitaumatoes.util;
 
+import com.trepudox.rottenitaumatoes.dataprovider.dto.JwtResponseDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.enums.EnProfile;
 import com.trepudox.rottenitaumatoes.dataprovider.model.UserModel;
 import io.jsonwebtoken.Claims;
@@ -19,17 +20,22 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = 8300949249285114768L;
 
-    public static final long JWT_TOKEN_VALIDITY = 120L; // in minutes
+    private static final String TOKEN_TYPE = "Bearer";
+
+    private static final Long JWT_TOKEN_VALIDITY = 60L * 60 ; // in minutes
 
     @Value("${security.jwt.secret}")
     private String secret;
 
-    public String generateToken(UserModel user) {
+    public JwtResponseDTO generateToken(UserModel user) {
         Map<String, Object> claims = new HashMap<>();
+
         List<String> roles = EnProfile.getRoles(user.getProfile());
         claims.put("roles", roles);
 
-        return doGenerateToken(claims, user.getUsername());
+        String jwtToken = doGenerateToken(claims, user.getUsername());
+
+        return new JwtResponseDTO(jwtToken, TOKEN_TYPE, JWT_TOKEN_VALIDITY, roles);
     }
 
     public void validateToken(String token) {
@@ -62,7 +68,7 @@ public class JwtTokenUtil implements Serializable {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret.trim().getBytes())
                 .compact();
     }
