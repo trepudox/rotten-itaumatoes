@@ -17,7 +17,8 @@ public class SetReviewAsDuplicatedOrNotUseCaseImpl implements ISetReviewAsDuplic
     private final ReviewRepository reviewRepository;
 
     public ReviewDTO set(DuplicatedReviewDTO duplicatedReview) {
-        ReviewModel reviewModel = reviewRepository.findById(duplicatedReview.getReviewId()).orElseThrow();
+        ReviewModel reviewModel = reviewRepository.findById(duplicatedReview.getReviewId())
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "A review não existe", 422));
         Boolean boolToSet = duplicatedReview.getDuplicated();
 
         if(reviewModel.getDuplicated().equals(boolToSet))

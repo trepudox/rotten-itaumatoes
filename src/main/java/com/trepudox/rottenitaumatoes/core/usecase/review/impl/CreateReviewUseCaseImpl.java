@@ -3,6 +3,7 @@ package com.trepudox.rottenitaumatoes.core.usecase.review.impl;
 import com.trepudox.rottenitaumatoes.core.exception.APIException;
 import com.trepudox.rottenitaumatoes.core.mapper.ReviewMapper;
 import com.trepudox.rottenitaumatoes.core.usecase.review.ICreateReviewUseCase;
+import com.trepudox.rottenitaumatoes.core.usecase.user.IUpdateScoreAndProfileUseCase;
 import com.trepudox.rottenitaumatoes.dataprovider.client.IOMDBClient;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.CreateReviewDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.ReviewDTO;
@@ -24,6 +25,7 @@ public class CreateReviewUseCaseImpl implements ICreateReviewUseCase {
     private final UserRepository userRepository;
     private final IOMDBClient omdbClient;
     private final JwtTokenUtil jwtTokenUtil;
+    private final IUpdateScoreAndProfileUseCase updateScoreAndProfileUseCase;
 
     @Override
     public ReviewDTO create(String token, CreateReviewDTO payload) {
@@ -35,18 +37,26 @@ public class CreateReviewUseCaseImpl implements ICreateReviewUseCase {
         String jwt = token.replace("Bearer ", "").trim();
         String username = jwtTokenUtil.getSubjectFromToken(jwt);
 
-        UserModel userModel = userRepository.findById(username).orElseThrow();
+        UserModel userModel = userRepository.findById(username)
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario da requisição não existe", 500));
 
-        ReviewModel reviewModel = ReviewModel.builder()
-                                        .imdbId(imdbId)
-                                        .reviewer(userModel)
-                                        .rating(payload.getRating())
-                                        .text(payload.getText())
-                                        .likes(0L).dislikes(0L).duplicated(false)
-                                        .creationDateTime(LocalDateTime.now()).build();
+        ReviewModel reviewModel = createReviewModel(imdbId, userModel, payload.getRating(), payload.getText());
 
         reviewRepository.save(reviewModel);
 
+        updateScoreAndProfileUseCase.update(username);
+
         return ReviewMapper.INSTANCE.reviewModelToReviewDTO(reviewModel);
     }
+
+    private ReviewModel createReviewModel(String imdbId, UserModel reviewer, Double rating, String text) {
+        return ReviewModel.builder()
+                .imdbId(imdbId)
+                .reviewer(reviewer)
+                .rating(rating)
+                .text(text)
+                .likes(0L).dislikes(0L).duplicated(false)
+                .creationDateTime(LocalDateTime.now()).build();
+    }
+
 }
