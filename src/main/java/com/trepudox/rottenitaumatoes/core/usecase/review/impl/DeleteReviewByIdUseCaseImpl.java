@@ -16,24 +16,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeleteReviewByIdUseCaseImpl implements IDeleteReviewByIdUseCase {
 
+    private static final EnProfile NEEDED_ROLE = EnProfile.MODERADOR;
+
     private final ReviewRepository reviewRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
     public void delete(String token, Long reviewId) {
-        ReviewModel reviewModel = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new APIException("Solicitação não atendida", "A review não existe", 422));
-        String reviewerUsername = reviewModel.getReviewer().getUsername();
+        String reviewerUsername = retrieveReviewerUsername(reviewId);
 
         String jwt = token.replace("Bearer ", "").trim();
         String tokenUsername = jwtTokenUtil.getSubjectFromToken(jwt);
         List<String> roles = jwtTokenUtil.getTokenRoles(jwt);
 
-        if(!reviewerUsername.equals(tokenUsername) && !roles.contains(EnProfile.MODERADOR.name())) {
-            throw new APISecurityException("Acesso negado", "Usuário não possui permissão necessária para acessar esse recurso", 403);
-        }
+        checkPermission(reviewerUsername, tokenUsername, roles);
 
         reviewRepository.deleteById(reviewId);
+    }
+
+    private String retrieveReviewerUsername(Long reviewId) {
+        ReviewModel reviewModel = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "A review não existe", 422));
+
+        return reviewModel.getReviewer().getUsername();
+    }
+
+    private void checkPermission(String reviewerUsername, String tokenUsername, List<String> roles) {
+        if(!reviewerUsername.equals(tokenUsername) && !roles.contains(NEEDED_ROLE.name())) {
+            throw new APISecurityException("Acesso negado", "Usuário não possui permissão necessária para acessar esse recurso", 403);
+        }
     }
 
 }

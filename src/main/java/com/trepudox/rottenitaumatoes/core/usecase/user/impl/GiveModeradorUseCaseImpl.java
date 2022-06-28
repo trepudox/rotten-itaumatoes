@@ -19,15 +19,23 @@ public class GiveModeradorUseCaseImpl implements IGiveModeradorUseCase {
 
     @Override
     public UserDTO give(UsernameDTO username) {
-        UserModel userModel = userRepository.findById(username.getUsername())
-                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario não existe", 422));
+        UserModel userModel = retrieveUserModel(username.getUsername());
 
-        if(userModel.getProfile().equals(EnProfile.MODERADOR))
-            throw new APIException("Usuário já é moderador", "A solicitação não foi atendida, o usuário já é moderador", 400);
+        checkIfUserAlreadyIsModerador(userModel);
 
         userModel.setProfile(EnProfile.MODERADOR);
         userRepository.saveAndFlush(userModel);
 
         return UserMapper.INSTANCE.userModelToDTO(userModel);
+    }
+
+    private UserModel retrieveUserModel(String username) {
+        return userRepository.findById(username)
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario não existe", 422));
+    }
+
+    private void checkIfUserAlreadyIsModerador(UserModel userModel) {
+        if(userModel.getProfile().equals(EnProfile.MODERADOR))
+            throw new APIException("Usuário já é moderador", "A solicitação não foi atendida, o usuário já é moderador", 422);
     }
 }

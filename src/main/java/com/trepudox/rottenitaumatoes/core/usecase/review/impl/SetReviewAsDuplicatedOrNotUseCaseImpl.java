@@ -17,17 +17,25 @@ public class SetReviewAsDuplicatedOrNotUseCaseImpl implements ISetReviewAsDuplic
     private final ReviewRepository reviewRepository;
 
     public ReviewDTO set(DuplicatedReviewDTO duplicatedReview) {
-        ReviewModel reviewModel = reviewRepository.findById(duplicatedReview.getReviewId())
-                .orElseThrow(() -> new APIException("Solicitação não atendida", "A review não existe", 422));
+        ReviewModel reviewModel = retrieveReviewModel(duplicatedReview.getReviewId());
         Boolean boolToSet = duplicatedReview.getDuplicated();
 
-        if(reviewModel.getDuplicated().equals(boolToSet))
-            throw new APIException("Solicitação não atendida", String.format("Campo 'duplicated' já está marcado como '%s'", boolToSet), 422);
+        checkSentParameter(reviewModel, boolToSet);
 
         reviewModel.setDuplicated(boolToSet);
         reviewRepository.saveAndFlush(reviewModel);
 
         return ReviewMapper.INSTANCE.reviewModelToReviewDTO(reviewModel);
+    }
+
+    private ReviewModel retrieveReviewModel(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "A review não existe", 422));
+    }
+
+    private void checkSentParameter(ReviewModel reviewModel, Boolean boolToSet) {
+        if(reviewModel.getDuplicated().equals(boolToSet))
+            throw new APIException("Solicitação não atendida", String.format("Campo 'duplicated' já está marcado como '%s'", boolToSet), 422);
     }
 
 }

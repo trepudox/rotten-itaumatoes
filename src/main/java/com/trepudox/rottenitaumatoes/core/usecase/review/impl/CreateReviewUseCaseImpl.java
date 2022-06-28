@@ -14,6 +14,7 @@ import com.trepudox.rottenitaumatoes.dataprovider.repository.UserRepository;
 import com.trepudox.rottenitaumatoes.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -28,25 +29,35 @@ public class CreateReviewUseCaseImpl implements ICreateReviewUseCase {
     private final IUpdateScoreAndProfileUseCase updateScoreAndProfileUseCase;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ReviewDTO create(String token, CreateReviewDTO payload) {
         String imdbId = payload.getImdbId();
+        checkIfOMDBItemExists(imdbId);
 
-        if(omdbClient.existsByImdbId(imdbId).equals(Boolean.FALSE))
-            throw new APIException("Item não existe", "Não foi possível criar a review, o item especificado não existe", 422);
-
-        String jwt = token.replace("Bearer ", "").trim();
-        String username = jwtTokenUtil.getSubjectFromToken(jwt);
-
-        UserModel userModel = userRepository.findById(username)
-                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario da requisição não existe", 500));
+        String username = getUsernameFromToken(token);
+        UserModel userModel = getUserModel(username);
 
         ReviewModel reviewModel = createReviewModel(imdbId, userModel, payload.getRating(), payload.getText());
 
         reviewRepository.save(reviewModel);
-
         updateScoreAndProfileUseCase.update(username);
 
         return ReviewMapper.INSTANCE.reviewModelToReviewDTO(reviewModel);
+    }
+
+    private void checkIfOMDBItemExists(String imdbId) {
+        if(omdbClient.existsByImdbId(imdbId).equals(Boolean.FALSE))
+            throw new APIException("Item não existe", "Não foi possível criar a review, o item especificado não existe", 422);
+    }
+
+    private String getUsernameFromToken(String token) {
+        String jwt = token.replace("Bearer ", "").trim();
+        return jwtTokenUtil.getSubjectFromToken(jwt);
+    }
+
+    private UserModel getUserModel(String username) {
+        return userRepository.findById(username)
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario da requisição não existe", 500));
     }
 
     private ReviewModel createReviewModel(String imdbId, UserModel reviewer, Double rating, String text) {

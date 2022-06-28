@@ -19,11 +19,20 @@ public class ViewProfileUseCaseImpl implements IViewProfileUseCase {
 
     @Override
     public UserDTO view(String token) {
-        String jwt = token.replace("Bearer ", "");
-        String username = jwtTokenUtil.getSubjectFromToken(jwt);
-        UserModel userModel = userRepository.findById(username)
-                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario da requisição não existe", 500));
+        String username = getUsernameFromToken(token);
+        UserModel userModel = getUserModel(username);
 
         return UserMapper.INSTANCE.userModelToDTO(userModel);
     }
+
+    private String getUsernameFromToken(String token) {
+        String jwt = token.replace("Bearer ", "");
+        return jwtTokenUtil.getSubjectFromToken(jwt);
+    }
+
+    private UserModel getUserModel(String username) {
+        return userRepository.findById(username)
+                .orElseThrow(() -> new APIException("Solicitação não atendida", "O usuario da requisição não existe", 500));
+    }
+
 }
