@@ -32,9 +32,11 @@ public class FilterRegistrationBeanConfig {
         registration.addUrlPatterns("/reviews");
         registration.addUrlPatterns("/reviews/id/*");
         registration.addUrlPatterns("/reviews/imdb-id/*");
+        registration.addUrlPatterns("/reviews/update"); // Verificacao de role ocorre dentro do UseCase
         registration.addUrlPatterns("/reviews/delete/*"); // Verificacao de role ocorre dentro do UseCase
         registration.addUrlPatterns("/reviews-with-quote/id/*");
         registration.addUrlPatterns("/reviews-with-quote/imdb-id/*");
+        registration.addUrlPatterns("/reviews-with-quote/update"); // Verificacao de role ocorre dentro do UseCase
         registration.addUrlPatterns("/reviews-with-quote/delete/*"); // Verificacao de role ocorre dentro do UseCase
         registration.setOrder(2);
 

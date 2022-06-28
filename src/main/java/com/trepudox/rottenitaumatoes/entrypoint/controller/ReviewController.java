@@ -4,6 +4,7 @@ import com.trepudox.rottenitaumatoes.core.usecase.review.*;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.CreateReviewDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.DuplicatedReviewDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.ReviewDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.UpdateReviewDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class ReviewController {
     private final IGetReviewByIdUseCase getReviewByIdUseCase;
     private final IGetReviewsByMovieIdUseCase getReviewsByMovieIdUseCase;
     private final ISetReviewAsDuplicatedOrNotUseCase setReviewAsDuplicatedOrNotUseCase;
+    private final IUpdateReviewUseCase updateReviewUseCase;
     private final IDeleteReviewByIdUseCase deleteReviewByIdUseCase;
 
     @PostMapping
@@ -46,6 +48,13 @@ public class ReviewController {
     public ResponseEntity<ReviewDTO> setReviewAsDuplicatedOrNot(@Valid @RequestBody DuplicatedReviewDTO duplicatedReview) {
         ReviewDTO review = setReviewAsDuplicatedOrNotUseCase.set(duplicatedReview);
         return ResponseEntity.status(HttpStatus.OK).body(review);
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<ReviewDTO> updateReview(@RequestHeader("Authorization") String token,
+                                                  @Valid @RequestBody UpdateReviewDTO payload) {
+        ReviewDTO updatedReview = updateReviewUseCase.update(token, payload);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedReview);
     }
 
     @DeleteMapping("/delete/{reviewId}")
