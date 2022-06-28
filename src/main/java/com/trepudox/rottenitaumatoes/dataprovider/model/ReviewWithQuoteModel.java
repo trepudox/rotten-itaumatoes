@@ -20,8 +20,6 @@ public class ReviewWithQuoteModel implements Serializable {
 
     private static final long serialVersionUID = -4628896027142331270L;
 
-    //TODO: analisar cascade, fetchtype e validation
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_with_quote_id")

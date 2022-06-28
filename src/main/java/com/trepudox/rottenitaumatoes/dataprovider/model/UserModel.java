@@ -23,8 +23,6 @@ public class UserModel implements Serializable {
 
     private static final long serialVersionUID = -6898167379430660643L;
 
-    //TODO: analisar validation
-
     @Id
     @Column(name = "username")
     private String username;

@@ -20,8 +20,6 @@ public class ReviewModel implements Serializable {
 
     private static final long serialVersionUID = 6756969076950547234L;
 
-    //TODO: analisar cascade, fetchtype e validation
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")

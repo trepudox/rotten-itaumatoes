@@ -21,8 +21,6 @@ public class ReplyModel implements Serializable {
 
     private static final long serialVersionUID = 959700976255020893L;
 
-    //TODO: analisar cascade, fetchtype e validation
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "reply_id")
