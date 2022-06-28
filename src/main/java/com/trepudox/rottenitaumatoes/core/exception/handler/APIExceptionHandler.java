@@ -3,25 +3,33 @@ package com.trepudox.rottenitaumatoes.core.exception.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trepudox.rottenitaumatoes.core.exception.APIException;
 import com.trepudox.rottenitaumatoes.core.exception.APISecurityException;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.ArtifactDTO;
 import com.trepudox.rottenitaumatoes.dataprovider.dto.ErrorResponseDTO;
 import feign.FeignException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
-public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
+public class APIExceptionHandler {
 
     @ExceptionHandler(APIException.class)
     public ResponseEntity<ErrorResponseDTO> handleAPIException(APIException e) {
         ErrorResponseDTO error = buildError(e.getTitle(), e.getDetail(), e.getStatus());
+
+        log.error("{} - {}: {}", e.getClass().getSimpleName(), e.getTitle(), e.getDetail());
 
         return ResponseEntity.status(HttpStatus.valueOf(e.getStatus())).body(error);
     }
@@ -35,6 +43,8 @@ public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
             error = buildError(e.getTitle(), e.getDetail(), e.getStatus());
         }
 
+        log.error("{} - {}: {}", e.getClass().getSimpleName(), e.getTitle(), e.getDetail());
+
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
 
@@ -42,7 +52,32 @@ public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
     public ResponseEntity<ErrorResponseDTO> handleJwtException(JwtException e) {
         int status = 401;
 
+        log.error("Erro de token: {}", e.getMessage());
+
         return ResponseEntity.status(HttpStatus.valueOf(status)).build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String title = "Parâmetros inválidos";
+        String detail = "Um ou mais parâmetros foram enviados de maneira errônea";
+        List<ArtifactDTO> artifacts = new ArrayList<>();
+        int status = 400;
+
+        List<ObjectError> fieldErrors = e.getBindingResult().getAllErrors();
+        for(ObjectError error : fieldErrors) {
+            FieldError fieldError = (FieldError) error;
+            String fieldName = fieldError.getField();
+            String message = fieldError.getDefaultMessage();
+            Object rejectedValue = fieldError.getRejectedValue();
+
+            artifacts.add(new ArtifactDTO(fieldName, message, rejectedValue));
+        }
+
+        ErrorResponseDTO error = buildError(title, detail, artifacts, status);
+        log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.valueOf(400)).body(error);
     }
 
     @ExceptionHandler(FeignException.class)
@@ -59,18 +94,20 @@ public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
         String detail = "Não foi possível estabelecer uma comunicação estável com serviços externos";
         int status = e.status() == -1 ? 504 : e.status();
 
-        log.error(title.concat(" - ").concat(e.request().toString()));
-
         ErrorResponseDTO error = buildError(title, detail, status);
+        log.error(title.concat(": ").concat(e.request().toString()));
 
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponseDTO> handleNoSuchElementException(NoSuchElementException e) {
-        int status = 422;
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String title = "Não foi possível ler a requisição";
+        String detail = "A requisição foi mal formada, possuindo erros de sintaxe";
+        int status = 400;
 
-        ErrorResponseDTO error = buildError("Não foi possível realizar a operação", "Entidade não encontrada", status);
+        ErrorResponseDTO error = buildError(title, detail, status);
+        log.error("HttpMessageNotReadableException: {}", e.getMessage());
 
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
     }
@@ -87,7 +124,6 @@ public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
         int status = 500;
 
         ErrorResponseDTO error = buildError(title, e.getMessage(), status);
-
         e.printStackTrace();
 
         return ResponseEntity.status(HttpStatus.valueOf(status)).body(error);
@@ -97,6 +133,17 @@ public class APIExceptionHandler { //TODO: HANDLER DO SPRING VALIDATION
         return ErrorResponseDTO.builder()
                 .title(title)
                 .detail(detail)
+                .status(status)
+                .artifacts(new ArrayList<>())
+                .dateTime(LocalDateTime.now())
+                .build();
+    }
+
+    private ErrorResponseDTO buildError(String title, String detail, List<ArtifactDTO> artifacts, int status) {
+        return ErrorResponseDTO.builder()
+                .title(title)
+                .detail(detail)
+                .artifacts(artifacts)
                 .status(status)
                 .dateTime(LocalDateTime.now())
                 .build();

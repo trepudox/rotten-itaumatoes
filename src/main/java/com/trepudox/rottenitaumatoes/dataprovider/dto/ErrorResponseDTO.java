@@ -3,6 +3,7 @@ package com.trepudox.rottenitaumatoes.dataprovider.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ public class ErrorResponseDTO {
 
     private String title;
     private String detail;
+    private List<ArtifactDTO> artifacts;
     private int status;
     private LocalDateTime dateTime;
 
