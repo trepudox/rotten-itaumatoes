@@ -31,7 +31,7 @@ public class ReviewWithQuoteModel implements Serializable {
     @JoinColumn(name = "reviewer")
     private UserModel reviewer;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "quoted_review_id")
     private ReviewModel quotedReview;
 

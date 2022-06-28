@@ -45,7 +45,7 @@ public class FilterRegistrationBeanConfig {
     public FilterRegistrationBean<BasicoAuthFilter> basicoAuthFilterRegistration(SecurityFilterUtil securityFilterUtil) {
         FilterRegistrationBean<BasicoAuthFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new BasicoAuthFilter(securityFilterUtil));
-        registration.addUrlPatterns("");
+        registration.addUrlPatterns("/replies");
         registration.setOrder(3);
 
         return registration;
