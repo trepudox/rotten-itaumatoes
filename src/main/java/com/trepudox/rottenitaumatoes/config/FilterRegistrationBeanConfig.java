@@ -32,7 +32,10 @@ public class FilterRegistrationBeanConfig {
         registration.addUrlPatterns("/reviews");
         registration.addUrlPatterns("/reviews/id/*");
         registration.addUrlPatterns("/reviews/imdb-id/*");
-        registration.addUrlPatterns("/reviews/delete/*"); // Verificacao de role ocorrerá dentro do UseCase
+        registration.addUrlPatterns("/reviews/delete/*"); // Verificacao de role ocorre dentro do UseCase
+        registration.addUrlPatterns("/reviews-with-quote/id/*");
+        registration.addUrlPatterns("/reviews-with-quote/imdb-id/*");
+        registration.addUrlPatterns("/reviews-with-quote/delete/*"); // Verificacao de role ocorre dentro do UseCase
         registration.setOrder(2);
 
         return registration;
@@ -52,7 +55,8 @@ public class FilterRegistrationBeanConfig {
     public FilterRegistrationBean<AvancadoAuthFilter> avancadoAuthFilterRegistration(SecurityFilterUtil securityFilterUtil) {
         FilterRegistrationBean<AvancadoAuthFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new AvancadoAuthFilter(securityFilterUtil));
-        registration.addUrlPatterns("");
+        registration.addUrlPatterns("/reviews-with-quote");
+        // TODO: LIKES E DISLIKES
         registration.setOrder(4);
 
         return registration;
@@ -64,6 +68,7 @@ public class FilterRegistrationBeanConfig {
         registration.setFilter(new ModeradorAuthFilter(securityFilterUtil));
         registration.addUrlPatterns("/users/give-mod");
         registration.addUrlPatterns("/reviews/set-duplicated");
+        registration.addUrlPatterns("/reviews-with-quote/set-duplicated");
         registration.setOrder(5);
 
         return registration;
