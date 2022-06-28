@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DuplicatedReviewDTO {
 
+    @NotNull
     @Min(0L)
     private Long reviewId;
 

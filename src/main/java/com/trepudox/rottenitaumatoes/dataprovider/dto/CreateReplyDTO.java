@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CreateReplyDTO {
 
+    @NotNull
     @Min(0)
     private Long reviewId;
 
