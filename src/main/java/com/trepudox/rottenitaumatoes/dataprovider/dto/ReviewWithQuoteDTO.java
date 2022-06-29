@@ -20,6 +20,7 @@ public class ReviewWithQuoteDTO {
     private Long likes;
     private Long dislikes;
     private Boolean duplicated;
+    private LocalDateTime updateDateTime;
     private LocalDateTime creationDateTime;
 
 }

@@ -1,14 +1,17 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
+import com.trepudox.rottenitaumatoes.dataprovider.enums.EnVoteType;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,7 +30,7 @@ public class ReviewModel implements Serializable {
     @Column(name = "review_id")
     private Long reviewId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "reviewer")
     private UserModel reviewer;
@@ -41,6 +44,9 @@ public class ReviewModel implements Serializable {
     @Column(name = "text")
     private String text;
 
+    @OneToMany(mappedBy = "votedReview")
+    private Set<VoteModel> votes;
+
     @Column(name = "likes")
     private Long likes;
 
@@ -50,8 +56,20 @@ public class ReviewModel implements Serializable {
     @Column(name = "duplicated")
     private Boolean duplicated;
 
+    @LastModifiedDate
+    @Column(name = "update_date_time")
+    private LocalDateTime updateDateTime;
+
     @CreatedDate
     @Column(name = "creation_date_time")
     private LocalDateTime creationDateTime;
+
+    public Long getLikes() {
+        return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.LIKE)).count();
+    }
+
+    public Long getDislikes() {
+        return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.DISLIKE)).count();
+    }
 
 }

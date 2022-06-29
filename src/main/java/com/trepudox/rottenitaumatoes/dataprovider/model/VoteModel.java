@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -20,48 +19,43 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "reply")
+@Table(name = "vote")
 @EntityListeners(AuditingEntityListener.class)
-public class ReplyModel implements Serializable {
+public class VoteModel implements Serializable {
 
-    private static final long serialVersionUID = 959700976255020893L;
+    private static final long serialVersionUID = 8790584860751972585L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "reply_id")
-    private Long replyId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vote_id")
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vote_type")
+    private EnVoteType voteType;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "replier")
-    private UserModel replier;
+    @JoinColumn(name = "voting_user")
+    private UserModel votingUser;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JoinColumn(name = "replied_review_id")
-    private ReviewModel repliedReview;
+    @JoinColumn(name = "voted_review_id")
+    private ReviewModel votedReview;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JoinColumn(name = "replied_review_with_quote_id")
-    private ReviewWithQuoteModel repliedReviewWithQuote;
+    @JoinColumn(name = "voted_review_with_quote_id")
+    private ReviewWithQuoteModel votedReviewWithQuote;
 
-    @Column(name = "text")
-    private String text;
-
-    @OneToMany(mappedBy = "votedReply")
-    private Set<VoteModel> votes;
-
-    @Column(name = "likes")
-    private Long likes;
-
-    @Column(name = "dislikes")
-    private Long dislikes;
-
-    @Column(name = "duplicated")
-    private Boolean duplicated;
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JoinColumn(name = "voted_reply_id")
+    private ReviewWithQuoteModel votedReply;
 
     @LastModifiedDate
     @Column(name = "update_date_time")
@@ -71,12 +65,5 @@ public class ReplyModel implements Serializable {
     @Column(name = "creation_date_time")
     private LocalDateTime creationDateTime;
 
-    public Long getLikes() {
-        return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.LIKE)).count();
-    }
-
-    public Long getDislikes() {
-        return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.DISLIKE)).count();
-    }
 
 }

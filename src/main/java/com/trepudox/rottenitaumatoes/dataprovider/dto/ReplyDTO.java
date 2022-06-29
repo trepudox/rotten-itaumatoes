@@ -16,16 +16,18 @@ import java.time.LocalDateTime;
 public class ReplyDTO {
 
     private Long replyId;
+    private UserDTO replier;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ReviewModel repliedReview;
+    private ReviewDTO repliedReview;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ReviewWithQuoteModel repliedReviewWithQuote;
-    private UserModel replier;
+    private ReviewWithQuoteDTO repliedReviewWithQuote;
+
     private String text;
     private Long likes;
     private Long dislikes;
+    private LocalDateTime updateDateTime;
     private LocalDateTime creationDateTime;
 
 }
