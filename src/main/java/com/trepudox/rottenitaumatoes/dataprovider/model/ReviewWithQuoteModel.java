@@ -1,6 +1,8 @@
 package com.trepudox.rottenitaumatoes.dataprovider.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,10 +28,12 @@ public class ReviewWithQuoteModel implements Serializable {
     private Long reviewWithQuoteId;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "reviewer")
     private UserModel reviewer;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "quoted_review_id")
     private ReviewModel quotedReview;
 

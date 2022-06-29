@@ -2,6 +2,8 @@ package com.trepudox.rottenitaumatoes.dataprovider.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -27,16 +29,19 @@ public class ReplyModel implements Serializable {
     private Long replyId;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "replied_review_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JoinColumn(name = "replied_review_id")
     private ReviewModel repliedReview;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "replied_review_with_quote_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JoinColumn(name = "replied_review_with_quote_id")
     private ReviewWithQuoteModel repliedReviewWithQuote;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "replier")
     private UserModel replier;
 
