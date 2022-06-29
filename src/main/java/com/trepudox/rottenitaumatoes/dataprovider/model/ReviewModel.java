@@ -48,11 +48,11 @@ public class ReviewModel implements Serializable {
     @OneToMany(mappedBy = "votedReview")
     private Set<VoteModel> votes = new HashSet<>();
 
-    @Column(name = "likes")
-    private Long likes;
+    @Transient
+    private transient Long likes;
 
-    @Column(name = "dislikes")
-    private Long dislikes;
+    @Transient
+    private transient Long dislikes;
 
     @Column(name = "duplicated")
     private Boolean duplicated;

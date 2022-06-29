@@ -54,11 +54,11 @@ public class ReplyModel implements Serializable {
     @OneToMany(mappedBy = "votedReply")
     private Set<VoteModel> votes;
 
-    @Column(name = "likes")
-    private Long likes;
+    @Transient
+    private transient Long likes;
 
-    @Column(name = "dislikes")
-    private Long dislikes;
+    @Transient
+    private transient Long dislikes;
 
     @Column(name = "duplicated")
     private Boolean duplicated;
