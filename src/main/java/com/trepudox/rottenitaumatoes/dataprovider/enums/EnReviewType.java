@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum EnReviewType {
 
-    NORMAL("review"),
-    WITH_QUOTE("reviewWithQuote");
+    NORMAL_REVIEW("review"),
+    REVIEW_WITH_QUOTE("reviewWithQuote");
 
     String label;
 

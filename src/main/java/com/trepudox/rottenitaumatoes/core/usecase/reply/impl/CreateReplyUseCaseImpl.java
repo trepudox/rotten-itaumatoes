@@ -43,12 +43,12 @@ public class CreateReplyUseCaseImpl implements ICreateReplyUseCase {
 
         ReviewModel reviewModel = null;
         ReviewWithQuoteModel reviewWithQuoteModel = null;
-        if(payload.getReviewType().toUpperCase().equals(EnReviewType.WITH_QUOTE.name())) {
+        if(payload.getReviewType().toUpperCase().equals(EnReviewType.REVIEW_WITH_QUOTE.name())) {
             reviewWithQuoteModel = getReviewWithQuoteModel(reviewId);
-        } else if(payload.getReviewType().toUpperCase().equals(EnReviewType.NORMAL.name())) {
+        } else if(payload.getReviewType().toUpperCase().equals(EnReviewType.NORMAL_REVIEW.name())) {
             reviewModel = getReviewModel(reviewId);
         } else {
-            throw new APIException("Parâmetro inválido", "O parâmetro 'reviewType' precisa ser igual a 'NORMAL' ou 'WITH_QUOTE'", 400);
+            throw new APIException("Parâmetro inválido", "O parâmetro 'reviewType' precisa ser igual a 'NORMAL_REVIEW' ou 'REVIEW_WITH_QUOTE'", 400);
         }
 
         ReplyModel replyModel = createReplyModel(reviewModel, reviewWithQuoteModel, userModel, payload.getText());
