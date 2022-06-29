@@ -19,6 +19,7 @@ public class ReviewWithQuoteController {
     private final IGetReviewWithQuoteByIdUseCase getReviewWithQuoteByIdUseCase;
     private final IGetReviewsWithQuoteByMovieIdUseCase getReviewsWithQuoteByMovieIdUseCase;
     private final ISetReviewWithQuoteAsDuplicatedOrNotUseCase setReviewWithQuoteAsDuplicatedOrNotUseCase;
+    private final IVoteOnReviewWithQuoteUseCase voteOnReviewWithQuoteUseCase;
     private final IUpdateReviewWithQuoteUseCase updateReviewWithQuoteUseCase;
     private final IDeleteReviewWithQuoteByIdUseCase deleteReviewWithQuoteByIdUseCase;
 
@@ -45,6 +46,13 @@ public class ReviewWithQuoteController {
     public ResponseEntity<ReviewWithQuoteDTO> setReviewWithQuoteAsDuplicatedOrNot(@Valid @RequestBody DuplicatedReviewDTO duplicatedReviewWithQuote) {
         ReviewWithQuoteDTO reviewWithQuote = setReviewWithQuoteAsDuplicatedOrNotUseCase.set(duplicatedReviewWithQuote);
         return ResponseEntity.status(HttpStatus.OK).body(reviewWithQuote);
+    }
+
+    @PostMapping("/vote")
+    public ResponseEntity<ReviewWithQuoteDTO> voteOnReviewWithQuote(@RequestHeader("Authorization") String token,
+                                                                    @Valid @RequestBody CreateVoteOnReviewWithQuoteDTO payload) {
+        ReviewWithQuoteDTO votedReviewWithQuote = voteOnReviewWithQuoteUseCase.vote(token, payload);
+        return ResponseEntity.status(HttpStatus.OK).body(votedReviewWithQuote);
     }
 
     @PatchMapping("/update")

@@ -1,10 +1,7 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
 import com.trepudox.rottenitaumatoes.core.usecase.reply.*;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.CreateReplyDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.DuplicatedReplyDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.ReplyDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.UpdateReplyDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +20,7 @@ public class ReplyController {
     private final IGetRepliesByReviewIdUseCase getRepliesByReviewIdUseCase;
     private final IGetRepliesByReviewWithQuoteIdUseCase getRepliesByReviewWithQuoteIdUseCase;
     private final ISetReplyAsDuplicatedOrNotUseCase setReplyAsDuplicatedOrNotUseCase;
+    private final IVoteOnReplyUseCase voteOnReplyUseCase;
     private final IUpdateReplyUseCase updateReplyUseCase;
     private final IDeleteReplyByIdUseCase deleteReplyByIdUseCase;
 
@@ -55,6 +53,13 @@ public class ReplyController {
     public ResponseEntity<ReplyDTO> setReplyAsDuplicatedOrNot(@Valid @RequestBody DuplicatedReplyDTO duplicatedReply) {
         ReplyDTO replyDTO = setReplyAsDuplicatedOrNotUseCase.set(duplicatedReply);
         return ResponseEntity.status(HttpStatus.OK).body(replyDTO);
+    }
+
+    @PostMapping("/vote")
+    public ResponseEntity<ReplyDTO> voteOnReply(@RequestHeader("Authorization") String token,
+                                                @Valid @RequestBody CreateVoteOnReplyDTO payload) {
+        ReplyDTO votedReply = voteOnReplyUseCase.vote(token, payload);
+        return ResponseEntity.status(HttpStatus.OK).body(votedReply);
     }
 
     @PatchMapping("/update")

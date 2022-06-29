@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateVoteReplyDTO {
+public class CreateVoteOnReplyDTO {
 
     @NotNull
     @Min(0)

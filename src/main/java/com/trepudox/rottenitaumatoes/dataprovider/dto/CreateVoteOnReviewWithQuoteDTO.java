@@ -11,11 +11,11 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateVoteReviewWithQuoteDTO {
+public class CreateVoteOnReviewWithQuoteDTO {
 
     @NotNull
     @Min(0)
-    private Long reviewWithoQuoteId;
+    private Long reviewWithQuoteId;
 
     @NotBlank
     private String voteType;

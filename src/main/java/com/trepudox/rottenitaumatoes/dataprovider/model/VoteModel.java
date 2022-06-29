@@ -55,7 +55,7 @@ public class VoteModel implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JoinColumn(name = "voted_reply_id")
-    private ReviewWithQuoteModel votedReply;
+    private ReplyModel votedReply;
 
     @LastModifiedDate
     @Column(name = "update_date_time")

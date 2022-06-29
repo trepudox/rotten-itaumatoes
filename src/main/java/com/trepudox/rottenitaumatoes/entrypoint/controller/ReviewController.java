@@ -51,8 +51,8 @@ public class ReviewController {
     @PostMapping("/vote")
     public ResponseEntity<ReviewDTO> voteOnReview(@RequestHeader("Authorization") String token,
                                                   @Valid @RequestBody CreateVoteOnReviewDTO payload) {
-        ReviewDTO review = voteOnReviewUseCase.vote(token, payload);
-        return ResponseEntity.status(HttpStatus.OK).body(review);
+        ReviewDTO votedReview = voteOnReviewUseCase.vote(token, payload);
+        return ResponseEntity.status(HttpStatus.OK).body(votedReview);
     }
 
     @PatchMapping("/update")

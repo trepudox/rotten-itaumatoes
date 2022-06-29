@@ -72,10 +72,16 @@ public class ReplyModel implements Serializable {
     private LocalDateTime creationDateTime;
 
     public Long getLikes() {
+        if(votes == null)
+            return 0L;
+
         return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.LIKE)).count();
     }
 
     public Long getDislikes() {
+        if(votes == null)
+            return 0L;
+
         return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.DISLIKE)).count();
     }
 
