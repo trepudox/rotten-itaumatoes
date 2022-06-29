@@ -26,17 +26,17 @@ public class ReplyModel implements Serializable {
     @Column(name = "reply_id")
     private Long replyId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "replied_review_id")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ReviewModel repliedReview;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "replied_review_with_quote_id")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ReviewWithQuoteModel repliedReviewWithQuote;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "replier")
     private UserModel replier;
 

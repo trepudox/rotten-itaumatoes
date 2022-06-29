@@ -25,7 +25,7 @@ public class ReviewModel implements Serializable {
     @Column(name = "review_id")
     private Long reviewId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewer")
     private UserModel reviewer;
 
