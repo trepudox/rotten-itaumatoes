@@ -63,7 +63,9 @@ public class FilterRegistrationBeanConfig {
         FilterRegistrationBean<AvancadoAuthFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new AvancadoAuthFilter(securityFilterUtil));
         registration.addUrlPatterns("/reviews-with-quote");
-        // TODO: LIKES E DISLIKES
+        registration.addUrlPatterns("/reviews/vote");
+        registration.addUrlPatterns("/reviews-with-quote/vote");
+        registration.addUrlPatterns("/replies/vote");
         registration.setOrder(4);
 
         return registration;

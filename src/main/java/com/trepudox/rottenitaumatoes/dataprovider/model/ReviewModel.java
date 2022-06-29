@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -45,7 +46,7 @@ public class ReviewModel implements Serializable {
     private String text;
 
     @OneToMany(mappedBy = "votedReview")
-    private Set<VoteModel> votes;
+    private Set<VoteModel> votes = new HashSet<>();
 
     @Column(name = "likes")
     private Long likes;
@@ -65,10 +66,16 @@ public class ReviewModel implements Serializable {
     private LocalDateTime creationDateTime;
 
     public Long getLikes() {
+        if(votes == null)
+            return 0L;
+
         return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.LIKE)).count();
     }
 
     public Long getDislikes() {
+        if(votes == null)
+            return 0L;
+
         return votes.stream().filter(vote -> vote.getVoteType().equals(EnVoteType.DISLIKE)).count();
     }
 

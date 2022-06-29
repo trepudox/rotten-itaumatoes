@@ -1,10 +1,7 @@
 package com.trepudox.rottenitaumatoes.entrypoint.controller;
 
 import com.trepudox.rottenitaumatoes.core.usecase.review.*;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.CreateReviewDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.DuplicatedReviewDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.ReviewDTO;
-import com.trepudox.rottenitaumatoes.dataprovider.dto.UpdateReviewDTO;
+import com.trepudox.rottenitaumatoes.dataprovider.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +19,7 @@ public class ReviewController {
     private final IGetReviewByIdUseCase getReviewByIdUseCase;
     private final IGetReviewsByMovieIdUseCase getReviewsByMovieIdUseCase;
     private final ISetReviewAsDuplicatedOrNotUseCase setReviewAsDuplicatedOrNotUseCase;
+    private final IVoteOnReviewUseCase voteOnReviewUseCase;
     private final IUpdateReviewUseCase updateReviewUseCase;
     private final IDeleteReviewByIdUseCase deleteReviewByIdUseCase;
 
@@ -47,6 +45,13 @@ public class ReviewController {
     @PostMapping("/set-duplicated")
     public ResponseEntity<ReviewDTO> setReviewAsDuplicatedOrNot(@Valid @RequestBody DuplicatedReviewDTO duplicatedReview) {
         ReviewDTO review = setReviewAsDuplicatedOrNotUseCase.set(duplicatedReview);
+        return ResponseEntity.status(HttpStatus.OK).body(review);
+    }
+
+    @PostMapping("/vote")
+    public ResponseEntity<ReviewDTO> voteOnReview(@RequestHeader("Authorization") String token,
+                                                  @Valid @RequestBody CreateVoteOnReviewDTO payload) {
+        ReviewDTO review = voteOnReviewUseCase.vote(token, payload);
         return ResponseEntity.status(HttpStatus.OK).body(review);
     }
 
