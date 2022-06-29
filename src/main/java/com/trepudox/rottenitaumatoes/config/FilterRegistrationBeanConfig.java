@@ -38,6 +38,11 @@ public class FilterRegistrationBeanConfig {
         registration.addUrlPatterns("/reviews-with-quote/imdb-id/*");
         registration.addUrlPatterns("/reviews-with-quote/update"); // Verificacao de role ocorre dentro do UseCase
         registration.addUrlPatterns("/reviews-with-quote/delete/*"); // Verificacao de role ocorre dentro do UseCase
+        registration.addUrlPatterns("/replies/id/*");
+        registration.addUrlPatterns("/replies/review/*");
+        registration.addUrlPatterns("/replies/review-with-quote/*");
+        registration.addUrlPatterns("/replies/update"); // Verificacao de role ocorre dentro do UseCase
+        registration.addUrlPatterns("/replies/delete/*"); // Verificacao de role ocorre dentro do UseCase
         registration.setOrder(2);
 
         return registration;
@@ -71,6 +76,7 @@ public class FilterRegistrationBeanConfig {
         registration.addUrlPatterns("/users/give-mod");
         registration.addUrlPatterns("/reviews/set-duplicated");
         registration.addUrlPatterns("/reviews-with-quote/set-duplicated");
+        registration.addUrlPatterns("/replies/set-duplicated");
         registration.setOrder(5);
 
         return registration;

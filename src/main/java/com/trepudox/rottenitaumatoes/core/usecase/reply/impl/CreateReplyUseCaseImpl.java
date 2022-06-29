@@ -85,7 +85,7 @@ public class CreateReplyUseCaseImpl implements ICreateReplyUseCase {
                 .repliedReviewWithQuote(reviewWithQuoteModel)
                 .replier(replier)
                 .text(text)
-                .likes(0L).dislikes(0L)
+                .likes(0L).dislikes(0L).duplicated(false)
                 .creationDateTime(LocalDateTime.now())
                 .build();
     }

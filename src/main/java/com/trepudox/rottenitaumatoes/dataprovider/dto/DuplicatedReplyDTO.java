@@ -1,7 +1,6 @@
 package com.trepudox.rottenitaumatoes.dataprovider.dto;
 
 import lombok.*;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,15 +10,13 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateReviewDTO {
+public class DuplicatedReplyDTO {
 
     @NotNull
-    @Min(0)
-    private Long reviewId;
+    @Min(0L)
+    private Long replyId;
 
-    @Range(min = 0, max = 10)
-    private Double rating;
-
-    private String text;
+    @NotNull
+    private Boolean duplicated;
 
 }

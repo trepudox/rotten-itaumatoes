@@ -49,6 +49,9 @@ public class ReplyModel implements Serializable {
     @Column(name = "dislikes")
     private Long dislikes;
 
+    @Column(name = "duplicated")
+    private Boolean duplicated;
+
     @CreatedDate
     @Column(name = "creation_date_time")
     private LocalDateTime creationDateTime;
