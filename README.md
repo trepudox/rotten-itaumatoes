@@ -20,13 +20,71 @@ Para funcionar de fato temos alguns passos a mais (como o [**auth-server**](http
 
 Como dito anteriormente, precisamos de uma instância do MySQL de pé para podermos usar o banco de dados da nossa aplicação.  
 
-Então caso já tenha o MySQL configurado e funcionando na máquina, seria necessário apenas verificar o usuário nas configurações da aplicação (application.yml), e então partir para a seção de [primeiros passos](https://github.com/trepudox/rotten-itaumatoes#primeiros-passos).  
+Então caso já tenha o MySQL configurado e funcionando na máquina, seria necessário apenas verificar o usuário nas configurações da aplicação (application.yml), e então partir para a seção de [configuração do auth-server](https://github.com/trepudox/rotten-itaumatoes#primeiros-passos).  
 
 Esta seção serve para mostrar como usar o MySQL com o Docker, sendo necessário apenas ter o Docker funcionando na máquina, o resto explicamos aqui.  
 
+Com o Docker rodando, a primeira coisa que devemos fazer, é baixar as imagens do Docker Hub para a nossa máquina.  
 
+Usando o PowerShell (ou qualquer outro console que te atenda) rode o seguinte comando:  
+
+``
+docker pull mysql
+``
+
+Dessa maneira, já temos a imagem do MySQL para criarmos a instância que precisamos para nossas aplicações.  
+
+#### Container do MySQL
+
+Para criar um container do MySQL, devemos rodar o seguinte comando:  
+
+``
+docker run -e MYSQL_ROOT_PASSWORD=root -dp 3306:3306 -it mysql
+``
+
+Onde temos algumas flags, que são importantes dependendo do que queremos.
+
+A flag `-e` serve para definir uma variável de ambiente, então estamos definindo que a senha *root* do MySQL no container será root.  
+
+Já a flag `-dp` são duas flags acopladas, a `--detach` e a `--port`, usando `--detach` o container irá rodar em background, já a `--port` é para mapearmos as portas.  
+
+A última flag, `-it`, é para tornar o container interativo, ou seja, conseguiremos acessar os arquivos do container, a bash e outros recursos dentro dele.
+
+Após executar o `docker run`, o Docker criará um container e imprimirá 4 caracteres no console.  
+
+Esses caracteres são o começo do **container ID**, precisamos dele para identificar o container.
+
+Com o container ID em mãos, podemos interagir com o container (lembra da flag `-it`?).  
+
+Então, rodando o seguinte comando conseguimos acessar o MySQL que está em execução dentro do container:
+
+``
+docker exec -it <containerID> mysql -uroot -p
+``
+
+Onde estamos informando que logaremos através do user **root** (pela flag `-uroot`) e que estaremos informando a senha para acessá-lo (pela flag `-p`).  
+
+Só não se esqueça de alterar o `<containerID>` para o ID do seu container MySQL!
+
+Dessa maneira já conseguimos acessar o MySQL do container e executar instruções dentro dele!
+
+### Configuração do auth-server
+
+Para podermos fazer cadastro e login no rotten-itaumatoes, precisamos configurar e rodar o [**auth-server**](https://github.com/trepudox/auth-server).  
+
+Uma das etapas para fazê-lo funcionar é a configuração do MySQL, mas temos também o Redis.  
+
+**IMPORTANTE!**  
+
+Para que o auth-server funcione corretamente precisamos rodar o rotten-itaumatoes ao menos uma vez, para que as tabelas e a base de dados sejam criadas.  
+
+Então inice o rotten-itaumatoes, e depois configure o auth-server, dessa maneira tudo correrá bem.  
+
+Recomendo também dar uma olhada na documentação do auth-server, lá há um passo a passo semelhante ao MySQL, só que com o Redis, e uma explicação de como o serviço funciona.
 
 ### Primeiros passos
+
+Após a criação do container, já podemos começar a brincar com  
 
 ## Como o rotten-itaumatoes funciona
 
