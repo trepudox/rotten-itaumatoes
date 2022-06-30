@@ -72,12 +72,12 @@ public class VoteOnReviewWithQuoteUseCaseImpl implements IVoteOnReviewWithQuoteU
     private void createAndSaveVote(UserModel votingUser, ReviewWithQuoteModel votedReviewWithQuote, EnVoteType voteType) {
         Optional<VoteModel> userPreviousVote = voteRepository.findByVotingUserAndVotedReviewWithQuote(votingUser, votedReviewWithQuote);
 
-        Long id = null;
+        Long previousVoteId = null;
         if(userPreviousVote.isPresent())
-            id = userPreviousVote.get().getId();
+            previousVoteId = userPreviousVote.get().getVoteId();
 
         VoteModel voteModel = VoteModel.builder()
-                .id(id)
+                .voteId(previousVoteId)
                 .voteType(voteType)
                 .votingUser(votingUser)
                 .votedReviewWithQuote(votedReviewWithQuote)

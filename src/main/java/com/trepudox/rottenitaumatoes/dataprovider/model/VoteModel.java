@@ -28,7 +28,7 @@ public class VoteModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vote_id")
-    private Long id;
+    private Long voteId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "vote_type")

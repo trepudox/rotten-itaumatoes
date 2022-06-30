@@ -72,12 +72,12 @@ public class VoteOnReviewUseCaseImpl implements IVoteOnReviewUseCase {
     private void createAndSaveVote(UserModel votingUser, ReviewModel votedReview, EnVoteType voteType) {
         Optional<VoteModel> userPreviousVote = voteRepository.findByVotingUserAndVotedReview(votingUser, votedReview);
 
-        Long id = null;
+        Long previousVoteId = null;
         if(userPreviousVote.isPresent())
-            id = userPreviousVote.get().getId();
+            previousVoteId = userPreviousVote.get().getVoteId();
 
         VoteModel voteModel = VoteModel.builder()
-                .id(id)
+                .voteId(previousVoteId)
                 .voteType(voteType)
                 .votingUser(votingUser)
                 .votedReview(votedReview)

@@ -12,9 +12,9 @@ Cada usuário tem um perfil que depende de seu score, e conforme seu perfil e se
 
 A princípio, para fazermos o rotten-itaumatoes rodar, precisamos apenas de uma instância do MySQL de pé (a porta e o host podem ser configurados nas propriedades da aplicação).  
 
-Sobre as tabelas e definições de dados, deixamos essa responsabilidade para a própria aplicação, então não há com o que se preocupar em criar a base de dados ou qualquer coisa do tipo, o rotten-itaumatoes já fará todo esse processo (desde que tenha permissão).  
+Sobre as tabelas e definições de dados, deixamos essa responsabilidade para a própria aplicação, então não há com o que se preocupar em criar a base de dados ou qualquer coisa do tipo, o rotten-itaumatoes já fará todo esse processo (desde que o user tenha as permissões necessárias).  
 
-Para funcionar de fato temos alguns passos a mais (como o [**auth-server**](https://github.com/trepudox/auth-server)), mas vamos começar mostrando do que precisamos para rodá-lo.  
+Para conseguirmos testar suas funcionalidades, temos alguns passos a mais (como o [**auth-server**](https://github.com/trepudox/auth-server)), mas vamos começar mostrando do que precisamos para rodá-lo.  
 
 ### MySQL com Docker
 
@@ -64,7 +64,7 @@ docker exec -it <containerID> mysql -uroot -p
 
 Onde estamos informando que logaremos através do user **root** (pela flag `-uroot`) e que estaremos informando a senha para acessá-lo (pela flag `-p`).  
 
-Só não se esqueça de alterar o `<containerID>` para o ID do seu container MySQL!
+Só não se esqueça de alterar o `<containerID>` para o ID do seu container MySQL.
 
 Dessa maneira já conseguimos acessar o MySQL do container e executar instruções dentro dele!
 
@@ -72,23 +72,60 @@ Dessa maneira já conseguimos acessar o MySQL do container e executar instruçõ
 
 Para podermos fazer cadastro e login no rotten-itaumatoes, precisamos configurar e rodar o [**auth-server**](https://github.com/trepudox/auth-server).  
 
-Uma das etapas para fazê-lo funcionar é a configuração do MySQL, mas temos também o Redis.  
+Uma das etapas para fazê-lo funcionar é a configuração do MySQL que acabamos de fazer, mas também temos que configurar o Redis.  
 
 **IMPORTANTE!**  
 
-Para que o auth-server funcione corretamente precisamos rodar o rotten-itaumatoes ao menos uma vez, para que as tabelas e a base de dados sejam criadas.  
+Para que o auth-server funcione corretamente precisamos rodar o rotten-itaumatoes ao menos uma vez, para que a base de dados e as tabelas sejam criadas.  
 
-Então inice o rotten-itaumatoes, e depois configure o auth-server, dessa maneira tudo correrá bem.  
+Então, inicie o rotten-itaumatoes, e depois configure o auth-server, dessa maneira tudo correrá bem.  
 
-Recomendo também dar uma olhada na documentação do auth-server, lá há um passo a passo semelhante ao MySQL, só que com o Redis, e uma explicação de como o serviço funciona.
+Recomendo também dar uma olhada na documentação do auth-server, lá há um passo da configuração do MySQL, do Redis, e uma explicação de como o serviço funciona.
 
 ### Primeiros passos
 
-Após a criação do container, já podemos começar a brincar com  
+Para começar, devemos ter o MySQL, o Redis e o auth-server rodando. Dessa maneira conseguiremos realizar o cadastro e login corretamente.  
+
+A primeira chamada que devemos fazer é o cadastro, onde passamos o usuário e a senha, a senha será encriptografada antes de ser enviada.  
+
+Após a criação do usuário, podemos efetuar o login, onde teremos uma resposta com o Bearer token a ser utilizado nas próximas chamadas.  
+
+<p align="center"><img src="img/login-screenshot.png" alt="Sketch Diagram"></p>
+
+Caso tenha tido um retorno como este, significa que está tudo certo e que o **rotten-itaumatoes** e o **auth-server** estão funcionando corretamente!  
 
 ## Como o rotten-itaumatoes funciona
 
-placeholder top
+Com o rotten-itaumatoes já funcionando, vamos explicar como funciona, e como entendi e desenvolvi o projeto.  
+
+A primeira coisa que procurei entender bem, foi o modelo de dados que usaria. Considerando um usuário e diversas ações que ele pode ter, tive diversas ideias em como mapear as entidades.  
+
+Acabei utilizando um banco de dados relacional, levando em conta que eu precisaria de fato relacionar muito um dado ao outro.  
+
+O MER ficou dessa maneira:  
+
+<p align="center"><img src="img/rotten-itaumatoes-mer.png" alt="Sketch Diagram"></p>
+
+Onde um usuário pode tem uma relação de **1:n** com todas as outras entidades.  
+
+O MER pode ter ficado um pouco confuso, por conta do excesso de relacionamentos, mas foi a maneira que encontrei de mapear cada tipo de postagem que o usuário poderia ter.  
+
+Onde é interessante notar que as entidades **reply** e **vote** possuem um relacionamento opcional com as entidades **review** e **review-with-quote**.  
+
+Mas o que são cada uma dessas entidades?  
+
+**user** se refere ao usuário e seu perfil.
+
+**review** seria a avaliação que o usuário pode fazer nos filmes, séries e episódios.
+
+**review-with-quote** seria uma avaliação de um filme, séries ou episódio, mas citando uma OUTRA **review**.
+
+**reply** se trata das respostas às reviews e reviews with quote.
+
+E a entidade **vote** se trata das avaliações de cada **review**, **review-with-quote** ou **reply**. Cada **vote** é um like ou um dislike.  
+
+
+
 
 ## Ideias para o projeto
 
@@ -149,4 +186,4 @@ Teríamos uma única chamada do Frontend, retornando todo o resultado que ele es
 Considerei a criação do microsserviço de filmes por conta do tratamento da resposta da OMDB API, sinto que seria melhor ter um microsserviço especializado para isso, já que tive que fazer vários tratamentos sobre a resposta recebida.
 Lógico que isso é só uma ideia, mesmo assim, segue o desenho de solução do que imaginei:  
 
-<p align="center"><img src="sketch-diagram.png" alt="Sketch Diagram"></p>
+<p align="center"><img src="img/sketch-diagram.png" alt="Sketch Diagram"></p>

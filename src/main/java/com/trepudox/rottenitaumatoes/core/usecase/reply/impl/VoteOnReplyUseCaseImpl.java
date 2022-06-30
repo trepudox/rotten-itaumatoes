@@ -72,12 +72,12 @@ public class VoteOnReplyUseCaseImpl implements IVoteOnReplyUseCase {
     private void createAndSaveVote(UserModel votingUser, ReplyModel votedReply, EnVoteType voteType) {
         Optional<VoteModel> userPreviousVote = voteRepository.findByVotingUserAndVotedReply(votingUser, votedReply);
 
-        Long id = null;
+        Long previouesVoteId = null;
         if(userPreviousVote.isPresent())
-            id = userPreviousVote.get().getId();
+            previouesVoteId = userPreviousVote.get().getVoteId();
 
         VoteModel voteModel = VoteModel.builder()
-                .id(id)
+                .voteId(previouesVoteId)
                 .voteType(voteType)
                 .votingUser(votingUser)
                 .votedReply(votedReply)

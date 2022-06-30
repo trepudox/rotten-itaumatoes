@@ -8,7 +8,7 @@ public enum EnReviewType {
     NORMAL_REVIEW("review"),
     REVIEW_WITH_QUOTE("reviewWithQuote");
 
-    String label;
+    final String label;
 
     EnReviewType(String label) {
         this.label = label;
