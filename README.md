@@ -91,4 +91,4 @@ Teríamos uma única chamada do Frontend, retornando todo o resultado que ele es
 Considerei a criação do microsserviço de filmes por conta do tratamento da resposta da OMDB API, sinto que seria melhor ter um microsserviço especializado para isso, já que tive que fazer vários tratamentos sobre a resposta recebida.
 Lógico que isso é só uma ideia, mesmo assim, segue o desenho de solução do que imaginei:  
 
-<span style="display:block;text-align:center">![Rotten Itaumatoes Future Diagram](sketch-diagram.png "Rotten Itaumatoes Sketch Diagram")</span>
+<p align="center"><img src="sketch-diagram.png" alt="Sketch Diagram"></p>
