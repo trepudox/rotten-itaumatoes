@@ -96,7 +96,7 @@ A primeira chamada que devemos fazer é o cadastro, onde passamos o usuário e a
 
 Após a criação do usuário, podemos efetuar o login, onde teremos uma resposta com o Bearer token a ser utilizado nas próximas chamadas.  
 
-<p align="center"><img src="img/login-screenshot.png" alt="Sketch Diagram"></p>
+<p align="center"><img src="img/login-screenshot.png" alt="Login screenshot"></p>
 
 Caso tenha tido um retorno como este, significa que está tudo certo e que o **rotten-itaumatoes** e o **auth-server** estão funcionando corretamente!  
 
@@ -112,7 +112,7 @@ Acabei utilizando um banco de dados relacional, levando em conta que eu precisar
 
 O MER ficou dessa maneira:  
 
-<p align="center"><img src="img/rotten-itaumatoes-mer.png" alt="Sketch Diagram"></p>
+<p align="center"><img src="img/rotten-itaumatoes-mer.png" alt="MER Diagram"></p>
 
 Onde um usuário tem uma relação de **1:n** com todas as outras entidades.  
 
@@ -257,3 +257,13 @@ Considerei a criação do microsserviço de filmes por conta do tratamento da re
 Lógico que isso é só uma ideia, mesmo assim, segue o desenho de solução do que imaginei:  
 
 <p align="center"><img src="img/sketch-diagram.png" alt="Sketch Diagram"></p>
+
+## Encerramento
+
+Espero que todas as dúvidas em relação ao projeto estejam sanadas, e que tenha gostado de como ele foi desenvolvido.  
+
+Qualquer dúvida, sugestão ou comentário, pode entrar em contato comigo pelo meu LinkedIn ou me mandar um email, deixarei os contatos abaixo. Valeu!  
+
+LinkedIn: https://www.linkedin.com/in/marcoa-queiroz/
+Emails: teoaa2@gmail.com
+marcoa.queiroz1722@gmail.com
