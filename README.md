@@ -2,13 +2,19 @@
 
 Esse projeto foi feito para a etapa de Coding Challenge do Bootcamp Itaú Dev Experts.  
 
-O projeto consiste em criar uma API de críticas de filmes e séries, com alguns requisitos especificados neste [documento](linkdodrive).  
+O projeto consiste em criar uma API de críticas de filmes e séries, com alguns requisitos especificados [neste documento](https://drive.google.com/file/d/1Y6QpY6XC0s0OZMEOv3Tsehy3YGnVlOnd/view).
 
-Um desses requisitos é consumir uma API externa de filmes, a [OMDb API](https://www.omdbapi.com/), criando as críticas a partir das informações dela.  
+Um desses requisitos é consumir uma API externa de filmes, a [OMDb API](https://www.omdbapi.com/), criando as críticas a partir das informações que ela retorna.  
 
-Cada usuário tem um perfil que depende de seu score, e conforme seu perfil e seu score evoluem, mais privilégios e permissões você tem.  Vamos entrar em mais detalhes sobre esses perfis e o que cada um pode fazer quando explicarmos a lógica e o funcionamento da aplicação.  
+Cada usuário tem um perfil que depende de seu score, e conforme seu perfil e seu score evoluem, mais privilégios e permissões ele tem.  Vamos entrar em mais detalhes sobre esses perfis e o que cada um pode fazer quando explicarmos a lógica e o funcionamento da aplicação.  
+
+Além da especificação de requisitos, temos uma pasta no drive contendo alguns recursos para testar e entender melhor nossas APIs, temos uma [collection](https://drive.google.com/file/d/1HsGDW8TzF_dAqOoCfQgIxeQlygDJIOc0/view?usp=sharing) e um [environment](https://drive.google.com/file/d/1DrPIerq_D8JG7UY1VguVWuTujOEGiJVe/view?usp=sharing) no Postman, o [MER da aplicação](https://drive.google.com/file/d/1GRP9SBJhrBBYd9G4rFGdWMYYHrquvxRH/view?usp=sharing) e outros recursos que podem te auxiliar.   
+
+Caso não queira usar o Postman, também configuramos o Swagger na aplicação, que pode ser acessado através do seguinte endereço: http://localhost:8080/swagger-ui/
 
 ## Como rodar o rotten-itaumatoes
+
+No ambiente local foram utilizados Java 11, e as últimas versões das imagens do MySQL e Redis no Docker.
 
 A princípio, para fazermos o rotten-itaumatoes rodar, precisamos apenas de uma instância do MySQL de pé (a porta e o host podem ser configurados nas propriedades da aplicação).  
 
@@ -20,7 +26,7 @@ Para conseguirmos testar suas funcionalidades, temos alguns passos a mais (como 
 
 Como dito anteriormente, precisamos de uma instância do MySQL de pé para podermos usar o banco de dados da nossa aplicação.  
 
-Então caso já tenha o MySQL configurado e funcionando na máquina, seria necessário apenas verificar o usuário nas configurações da aplicação (application.yml), e então partir para a seção de [configuração do auth-server](https://github.com/trepudox/rotten-itaumatoes#primeiros-passos).  
+Então caso já tenha o MySQL configurado e funcionando na máquina, seria necessário apenas verificar o usuário nas configurações da aplicação (application.yml), e então partir para a seção de [configuração do auth-server](https://github.com/trepudox/rotten-itaumatoes#configuração-do-auth-server).  
 
 Esta seção serve para mostrar como usar o MySQL com o Docker, sendo necessário apenas ter o Docker funcionando na máquina, o resto explicamos aqui.  
 
@@ -80,11 +86,11 @@ Para que o auth-server funcione corretamente precisamos rodar o rotten-itaumatoe
 
 Então, inicie o rotten-itaumatoes, e depois configure o auth-server, dessa maneira tudo correrá bem.  
 
-Recomendo também dar uma olhada na documentação do auth-server, lá há um passo da configuração do MySQL, do Redis, e uma explicação de como o serviço funciona.
+Recomendo também dar uma olhada na [documentação do auth-server](https://github.com/trepudox/auth-server#auth-server), lá há um passo da configuração do MySQL, do Redis, e uma explicação de como o serviço funciona.
 
 ### Primeiros passos
 
-Para começar, devemos ter o MySQL, o Redis e o auth-server rodando. Dessa maneira conseguiremos realizar o cadastro e login corretamente.  
+Para começar, devemos ter o MySQL, o auth-server e o Redis rodando (precisamos do Redis, já que ele é um requisito para o auth-server). Dessa maneira conseguiremos realizar o cadastro e login corretamente.  
 
 A primeira chamada que devemos fazer é o cadastro, onde passamos o usuário e a senha, a senha será encriptografada antes de ser enviada.  
 
@@ -96,23 +102,25 @@ Caso tenha tido um retorno como este, significa que está tudo certo e que o **r
 
 ## Como o rotten-itaumatoes funciona
 
-Com o rotten-itaumatoes já funcionando, vamos explicar como funciona, e como entendi e desenvolvi o projeto.  
+Com o rotten-itaumatoes já funcionando, já podemos partir para a execução e entrar nos detalhes das requisições e entidades. Vamos explicar como funciona, e como entendi os requisitos e desenvolvi o projeto.  
 
-A primeira coisa que procurei entender bem, foi o modelo de dados que usaria. Considerando um usuário e diversas ações que ele pode ter, tive diversas ideias em como mapear as entidades.  
+### Modelagem de dados e MER
 
-Acabei utilizando um banco de dados relacional, levando em conta que eu precisaria de fato relacionar muito um dado ao outro.  
+A primeira coisa que procurei entender bem, foi como seria o modelo de dados. Considerando um usuário e diversas ações que ele pode ter, tive diversas ideias de como mapear as entidades.  
+
+Acabei utilizando um banco de dados relacional, levando em conta que eu precisaria muito relacionar um dado ao outro.  
 
 O MER ficou dessa maneira:  
 
 <p align="center"><img src="img/rotten-itaumatoes-mer.png" alt="Sketch Diagram"></p>
 
-Onde um usuário pode tem uma relação de **1:n** com todas as outras entidades.  
+Onde um usuário tem uma relação de **1:n** com todas as outras entidades.  
 
 O MER pode ter ficado um pouco confuso, por conta do excesso de relacionamentos, mas foi a maneira que encontrei de mapear cada tipo de postagem que o usuário poderia ter.  
 
-Onde é interessante notar que as entidades **reply** e **vote** possuem um relacionamento opcional com as entidades **review** e **review-with-quote**.  
+Onde é interessante notar que as entidades **reply** e **vote** possuem um relacionamento opcional com as entidades **review** e **review-with-quote**, e no caso do **vote**, também recebe opcionalmente uma **reply**.  
 
-Mas o que são cada uma dessas entidades?  
+#### Mas o que são cada uma dessas entidades?  
 
 **user** se refere ao usuário e seu perfil.
 
@@ -124,12 +132,74 @@ Mas o que são cada uma dessas entidades?
 
 E a entidade **vote** se trata das avaliações de cada **review**, **review-with-quote** ou **reply**. Cada **vote** é um like ou um dislike.  
 
+#### E por que as entidades **vote** e **reply** podem receber as outras entidades como opcionais?
 
+Optei por desenvolver dessa maneira, já que uma reply pode ser para qualquer uma das reviews (review e review-with-quote) e um like/dislike pode ser para qualquer uma das publicações (review, review-with-quote e reply).  
 
+Então quando um registro de **vote** é criado na base, ele recebe apenas uma entidade, seja **reply**, **review** ou **review-with-quote**.  
+
+O mesmo serve para a **reply**, quando a resposta é direcionada à **review**, o campo 'replied_review_with_quote_id' fica vazio, e vice versa.
+
+Por mais que o banco de dados tenha esse dinamismo no relacionamento, a aplicação não permite que uma reply ou um vote possuam mais de uma postagem sendo referenciada.  
+
+### Consumo da aplicação
+
+Entendendo como as entidades funcionam, o consumo da aplicação se torna mais intuitivo, já que os nomes dos endpoints, no Postman, no Swagger e até mesmo no código, procuram relatar exatamente o que o método faz.  
+
+Inclusive, recomendamos que utilize o Postman com a collection e o environment disponibilizados no [drive](https://drive.google.com/drive/folders/10NPwM96BjES6jWQZ8hBUmPdqFrtC3BDu), pois também há uma documentação para cada endpoint do projeto.  
+
+Mesmo assim, gostaria de passar um pouco por eles, para clarear o máximo possível.
+
+Os endpoints da categoria **Auth** servem para fazer o login e o cadastro. Ao enviar suas credenciais, a API criptografa a senha e envia ao auth-server, isso acontece tanto no login quanto no cadastro. Ao receber o token na resposta do login, só é necessário enviá-lo como Bearer em cada uma das requisições.  
+
+Na categoria **User**, temos os endpoints de ver perfil e de conceder moderador. Onde no endpoint de ver perfil só é necessário enviar o token, que o perfil do usuário já será retornado.  
+
+Nas categorias **Movies**, **Series** e **Episodes**, podemos buscar itens diretamente pelo seu nome ou pelo seu imdbID. Também podemos fazer uma pesquisa aos itens que não sabemos o nome exato.  
+
+Temos só um pequeno adendo aos endpoints de **Episodes**. Decidi mantê-los na aplicação, mas dois deles não funcionam como o esperado por conta de algum bug na OMDb API. Temos o seguinte estado para cada endpoint:  
+
+1. Funcionando:
+   - `GET /episodes/imdb-id/{imdbId}`
+2. NÃO funcionando:
+   - `GET /episodes/title/{title}`
+   - `GET /episodes/search/?title=`
+
+A partir das informações que são retornadas pela OMDb API, um usuário consegue obter o imdbID do item (filme, serie ou espisodio) e já consegue criar uma **review**.  
+
+Então, é aqui que a brincadeira começa de verdade, criando e manipulando reviews, replies e reviews-with-quote.
+
+Temos a criação da review, onde passamos o imdbID do item que estamos avaliando, a nota e o texto. Ao criar uma review, o usuário ganha 1 de score.  
+
+Podemos buscar uma review pelo seu ID ou todas as reviews de algum filme, serie ou episodio, pelo seu imdbID.  
+
+Também temos um endpoint onde podemos definir uma review como duplicada ou não duplicada. Para este endpoint é necessário ser Moderador.  
+
+Um outro POST que temos é o de avaliar uma review, seria o vote, o like ou o dislike. Passamos o ID da review e o tipo de voto que queremos (like ou dislike). O usuário precisa ser Avançado ou superior para acessar esse endpoint.
+
+Devemos nos atentar ao campo `voteType`, que é um Enum na aplicação, e só aceitará as strings `"LIKE"` e `"DISLIKE"`.
+
+Temos um PATCH para atualizar a review, onde podemos passar a nota, o texto, ou os dois parâmetros. Fica a critério do usuário. Para se atualizar uma review é necessário ser o dono da postagem.  
+
+E por último temos a exclusão de uma review, ela é feita por ID e é necessário ser Moderador ou o dono da postagem para fazer isso.  
+
+A lógica e as requisções das entidades review, review-with-quote e reply são bem parecidas, então creio que se torna redundante explicar cada endpoint. Mesmo assim, ainda gostaria de citar alguns pontos que podem trazer dúvidas.
+
+Uma review with quote pode apenas referenciar uma outra **review**, e não outra **review with quote**. Então ao criar uma review with quote, certifique-se que o ID que está enviando é de uma review existente.  
+
+Assim como o endpoint de avaliação das reviews e replies, temos um Enum que devemos nos atentar na criação de replies.  
+
+O nome do campo é `reviewType` e os valores aceitos serão apenas `NORMAL_REVIEW` e `REVIEW_WITH_QUOTE`.
+
+Relembrando que esses detalhes estão na documentação dentro do Postman, mas deixamos algumas explicações aqui também.  
+
+Uma observação importante em relação à pontuação e perfil do usuário: Quando o perfil do usuário atingir o suficiente para evoluir, ele irá passar para o próximo perfil. Mas é necessário fazer o login novamente, para atualizar o token e obter as permissões do novo nível de perfil.
+
+Espero que essa etapa de como consumir a aplicação tenha ficado clara, pode ter ficado breve, mas tentei apresentar apenas os pontos mais importantes, para também não se tornar muita informação. Bons testes!
 
 ## Ideias para o projeto
 
-# alguma coisa aqui antes pf Marco!!  
+Mesmo com a aplicação funcionando corretamente e atendendo os requisitos, ainda quis implementar e mudar algumas coisas, que por alguma razão não consegui.  
+
 Nessa seção do README estarei apenas dissertando algumas ideias que tive, e alguns motivos que tive para fazer a aplicação deste jeito.
 
 ### Planos de implementação
